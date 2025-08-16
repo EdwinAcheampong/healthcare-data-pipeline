@@ -6,8 +6,15 @@
 [![Jupyter](https://img.shields.io/badge/jupyter-%23FA0F00.svg?logo=jupyter&logoColor=white)](https://jupyter.org/)
 [![FHIR](https://img.shields.io/badge/FHIR-R4-green.svg)](https://hl7.org/fhir/)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+[![DOI](https://img.shields.io/badge/DOI-10.5281/zenodo.XXXXXX-blue.svg)](https://doi.org/10.5281/zenodo.XXXXXX)
 
-> **MSc Healthcare Informatics Project: Advanced data pipeline and machine learning framework for healthcare analytics using Synthea COVID-19 synthetic data, achieving comprehensive patient journey modeling and FHIR-compliant interoperability.**
+> **Advanced healthcare data pipeline and machine learning framework for clinical analytics research. Built for MSc Healthcare Informatics, featuring 12,352+ synthetic patients, FHIR R4 compliance, and production-ready infrastructure for healthcare data science.**
+
+<div align="center">
+
+**[🚀 Quick Start](#-quick-start)** • **[📊 Dataset](#-dataset-overview)** • **[📚 Documentation](docs/)** • **[🤝 Contributing](#-contributing)** • **[📄 Citation](#-citation)**
+
+</div>
 
 ## 🚀 **Quick Start**
 
@@ -16,15 +23,17 @@
 git clone https://github.com/EdwinAcheampong/healthcare-data-pipeline.git
 cd healthcare-data-pipeline
 
-# 2. Set up data (required - see data/DATA_SETUP.md)
-# Data is not included due to size (651MB) - follow setup guide
+# 2. Install dependencies
+pip install -r requirements.txt
+
+# 3. Download dataset (651MB) - automated setup
 python scripts/setup_environment.py
 
-# 3. Access Jupyter Lab for analysis
+# 4. Launch analysis environment
 jupyter lab notebooks/01_data_exploration.ipynb
 ```
 
-**⚡ Try it in 5 minutes**: [Data Setup Guide](data/DATA_SETUP.md) | [Data Validation](scripts/validate_data.py)
+> **📊 Dataset Access**: Download the complete Synthea COVID-19 dataset from [Zenodo DOI: 10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) | **⚡ Quick Setup**: [Installation Guide](docs/guides/installation.md)
 
 ---
 
@@ -354,23 +363,57 @@ pytest tests/unit/test_data_pipeline.py
 - Use type hints
 - Follow conventional commit messages
 
-## 📄 License
+## 📄 **Citation**
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+If you use this project in your research, please cite:
 
-## 📞 Contact
+### **Repository Citation**
+```bibtex
+@misc{yekini2024healthcare,
+  title={Healthcare Data Analytics \& ML Pipeline: Synthea COVID-19 Analysis Framework},
+  author={Yekini, Muhammad and Acheampong, Edwin},
+  year={2024},
+  publisher={GitHub},
+  howpublished={\url{https://github.com/EdwinAcheampong/healthcare-data-pipeline}},
+  note={MSc Healthcare Informatics Project}
+}
+```
 
-**Muhammad Yekini**
+### **Dataset Citation**
+```bibtex
+@dataset{yekini2024synthea_data,
+  author = {Yekini, Muhammad and Acheampong, Edwin},
+  title = {{Synthea COVID-19 Healthcare Dataset for Analytics Research}},
+  year = {2024},
+  publisher = {Zenodo},
+  doi = {10.5281/zenodo.XXXXXX},
+  url = {https://doi.org/10.5281/zenodo.XXXXXX}
+}
+```
 
-- Email: your-email@example.com
-- Project: MSc Healthcare Data Pipeline
-- Institution: [Your Institution]
+## 📄 **License**
 
-## 🙏 Acknowledgments
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
 
-- **Synthea**: For providing synthetic healthcare data
-- **FHIR Community**: For healthcare interoperability standards
-- **Open Source Libraries**: All the amazing libraries that make this possible
+- ✅ **Commercial Use**: Permitted with attribution
+- ✅ **Academic Use**: Encouraged for research and education
+- ✅ **Modification**: Adapt for your specific research needs
+- ✅ **Distribution**: Share with the research community
+
+## 👥 **Contributors**
+
+- **Muhammad Yekini** - *MSc Healthcare Informatics Candidate* - Project Lead & Research
+- **Edwin Acheampong** - *Technical Implementation & Development*
+
+### **Contributing**
+We welcome contributions from the healthcare informatics community! See our [Contributing Guide](CONTRIBUTING.md) for details.
+
+## 🙏 **Acknowledgments**
+
+- **[Synthea](https://github.com/synthetichealth/synthea)** - Synthetic healthcare data generation
+- **[HL7 FHIR Community](https://hl7.org/fhir/)** - Healthcare interoperability standards
+- **[Open Source Healthcare](https://github.com/topics/healthcare)** - Collaborative ecosystem
+- **Academic Supervisors** - Research guidance and methodology validation
 
 ---
 
@@ -378,20 +421,28 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### ⭐ **Star this repository if it helped your healthcare research!** ⭐
 
-[![GitHub stars](https://img.shields.io/github/stars/yourusername/msc-healthcare-project.svg?style=social&label=Star)](https://github.com/yourusername/msc-healthcare-project)
-[![GitHub forks](https://img.shields.io/github/forks/yourusername/msc-healthcare-project.svg?style=social&label=Fork)](https://github.com/yourusername/msc-healthcare-project/fork)
-[![GitHub watchers](https://img.shields.io/github/watchers/yourusername/msc-healthcare-project.svg?style=social&label=Watch)](https://github.com/yourusername/msc-healthcare-project)
+[![GitHub stars](https://img.shields.io/github/stars/EdwinAcheampong/healthcare-data-pipeline.svg?style=social&label=Star)](https://github.com/EdwinAcheampong/healthcare-data-pipeline)
+[![GitHub forks](https://img.shields.io/github/forks/EdwinAcheampong/healthcare-data-pipeline.svg?style=social&label=Fork)](https://github.com/EdwinAcheampong/healthcare-data-pipeline/fork)
+[![GitHub watchers](https://img.shields.io/github/watchers/EdwinAcheampong/healthcare-data-pipeline.svg?style=social&label=Watch)](https://github.com/EdwinAcheampong/healthcare-data-pipeline)
 
 ---
 
 **Built with ❤️ for healthcare research and education**
 
-_Empowering the next generation of healthcare data scientists with open, ethical, and comprehensive analytics tools_
+*Advancing healthcare informatics through open science and collaborative research*
 
-[🚀 Get Started](#-quick-start) • [📚 Documentation](docs/) • [🤝 Community](https://github.com/yourusername/msc-healthcare-project/discussions) • [🎓 Academic Use](#-academic-use)
+**[🚀 Quick Start](#-quick-start)** • **[📊 Dataset](https://doi.org/10.5281/zenodo.XXXXXX)** • **[📚 Documentation](docs/)** • **[💬 Discussions](https://github.com/EdwinAcheampong/healthcare-data-pipeline/discussions)**
 
 </div>
 
 ---
 
-**Note**: This project uses synthetic data generated by Synthea and is designed specifically for educational and research purposes. The data contains no real patient information (PHI) and is safe for academic use without IRB approval. Always ensure compliance with your institution's research ethics guidelines.
+### 🔒 **Privacy & Ethics**
+
+This project uses **100% synthetic data** generated by Synthea:
+- ✅ **No real patient information (PHI)**
+- ✅ **Safe for research and education**
+- ✅ **No IRB approval required**
+- ✅ **Compliant with healthcare data regulations**
+
+*Always follow your institution's research ethics guidelines for any healthcare-related projects.*

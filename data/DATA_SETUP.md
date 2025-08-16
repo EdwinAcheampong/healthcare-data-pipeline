@@ -24,6 +24,7 @@ python scripts/setup_environment.py
 You need to place **Synthea synthetic healthcare data** in the `data/synthea/` directory.
 
 **Required Files:**
+
 - `patients.csv` (12,352 patients)
 - `conditions.csv` (114,544 conditions)
 - `encounters.csv` (321,528 encounters)
@@ -50,6 +51,7 @@ You also need **109 C-CDA XML documents** in the `data/ccda/` directory for heal
 ## 📦 **Data Sources**
 
 ### **Option 1: Generate with Synthea**
+
 ```bash
 # Install Synthea
 git clone https://github.com/synthetichealth/synthea.git
@@ -60,7 +62,9 @@ cd synthea
 ```
 
 ### **Option 2: Download Sample Data**
+
 If you have access to Synthea sample datasets, you can use those. The project expects:
+
 - **12,352+ patients** for meaningful analysis
 - **COVID-19 module enabled** for pandemic research
 - **Multi-year data range** (2010-2020) for temporal analysis
@@ -80,6 +84,7 @@ python scripts/verify_setup.py
 ```
 
 **Expected Output:**
+
 ```
 ✅ Data Validation Complete!
 📊 Data Summary:
@@ -132,18 +137,21 @@ data/
 ## ⚠️ **Important Notes**
 
 ### **Privacy & Ethics**
+
 - ✅ **100% Synthetic Data**: No real patient information
 - ✅ **Research Safe**: No IRB approval required
 - ✅ **Educational Use**: Perfect for learning and development
 - ⚠️ **Not for Production**: Synthetic data only, not real healthcare decisions
 
 ### **Data Size Considerations**
+
 - **Total Size**: ~651.4 MB (too large for GitHub)
 - **CSV Files**: ~500 MB (patient records)
 - **XML Files**: ~150 MB (clinical documents)
 - **Processing**: Requires 8GB+ RAM for full analysis
 
 ### **Academic Use**
+
 - **Citation Required**: Acknowledge Synthea in academic work
 - **Reproducibility**: Document data generation parameters
 - **Sharing**: Provide data setup instructions for peer review
@@ -153,6 +161,7 @@ data/
 ## 🆘 **Troubleshooting**
 
 ### **Data Not Found Error**
+
 ```bash
 # If you get "data files not found" errors
 python scripts/verify_setup.py
@@ -160,6 +169,7 @@ python scripts/verify_setup.py
 ```
 
 ### **Size Warnings**
+
 ```bash
 # If analysis is slow due to data size
 # Use sample data for initial development
@@ -167,6 +177,7 @@ python scripts/verify_setup.py
 ```
 
 ### **Format Issues**
+
 ```bash
 # If CSV files have encoding issues
 # Ensure UTF-8 encoding
