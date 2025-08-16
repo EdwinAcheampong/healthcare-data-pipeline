@@ -50,7 +50,17 @@ You also need **109 C-CDA XML documents** in the `data/ccda/` directory for heal
 
 ## 📦 **Data Sources**
 
-### **Option 1: Generate with Synthea**
+### **⭐ Option 1: Download from Google Drive (Recommended)**
+
+**Direct Access**: [https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing](https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing)
+
+**Steps**:
+1. Click the Google Drive link above
+2. Right-click on the folder → "Download" (creates zip file)
+3. Extract the downloaded zip to your project's `data/` directory
+4. Run validation: `python scripts/validate_data.py`
+
+### **Option 2: Generate with Synthea**
 
 ```bash
 # Install Synthea
@@ -61,9 +71,9 @@ cd synthea
 ./run_synthea -p 12352 --exporter.fhir.export false --exporter.ccda.export true Massachusetts
 ```
 
-### **Option 2: Download Sample Data**
+### **Option 3: Alternative Data Sources**
 
-If you have access to Synthea sample datasets, you can use those. The project expects:
+If you prefer to use your own Synthea datasets, the project expects:
 
 - **12,352+ patients** for meaningful analysis
 - **COVID-19 module enabled** for pandemic research

@@ -33,7 +33,7 @@ python scripts/setup_environment.py
 jupyter lab notebooks/01_data_exploration.ipynb
 ```
 
-> **📊 Dataset Access**: Download the complete Synthea COVID-19 dataset from [Zenodo DOI: 10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX) | **⚡ Quick Setup**: [Installation Guide](docs/guides/installation.md)
+> **📊 Dataset Access**: Download the complete Synthea COVID-19 dataset (651MB) from [Google Drive](https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing) | **⚡ Quick Setup**: [Data Hosting Guide](data/DATA_HOSTING_GUIDE.md)
 
 ---
 
@@ -431,7 +431,7 @@ We welcome contributions from the healthcare informatics community! See our [Con
 
 *Advancing healthcare informatics through open science and collaborative research*
 
-**[🚀 Quick Start](#-quick-start)** • **[📊 Dataset](https://doi.org/10.5281/zenodo.XXXXXX)** • **[📚 Documentation](docs/)** • **[💬 Discussions](https://github.com/EdwinAcheampong/healthcare-data-pipeline/discussions)**
+**[🚀 Quick Start](#-quick-start)** • **[📊 Dataset](https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing)** • **[📚 Documentation](docs/)** • **[💬 Discussions](https://github.com/EdwinAcheampong/healthcare-data-pipeline/discussions)**
 
 </div>
 

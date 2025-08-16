@@ -3,6 +3,7 @@
 ## 🎯 **Recommended: Zenodo Academic Repository**
 
 [Zenodo](https://zenodo.org) is the **best choice for academic MSc projects** because it provides:
+
 - ✅ **Permanent DOI**: Citable dataset with academic credibility
 - ✅ **Free Hosting**: Up to 50GB per dataset
 - ✅ **Version Control**: Track dataset versions
@@ -26,25 +27,33 @@
 ### **🔗 Integration with Repository**
 
 Once uploaded, update your project documentation with:
+
 ```markdown
 ## Data Access
+
 Download the complete dataset (651MB) from:
 **DOI:** [10.5281/zenodo.XXXXXX](https://doi.org/10.5281/zenodo.XXXXXX)
 ```
 
 ---
 
-## 🌐 **Alternative: Google Drive (Quick Setup)**
+## 🌐 **Google Drive Access (Currently Available)**
 
-For immediate sharing while setting up Zenodo:
+The complete healthcare dataset is immediately available on Google Drive:
 
-1. **Upload to Google Drive**
-2. **Set Sharing**: "Anyone with link can view"
-3. **Get Direct Download Link**:
-   ```
-   Original: https://drive.google.com/file/d/FILE_ID/view
-   Direct:   https://drive.google.com/uc?export=download&id=FILE_ID
-   ```
+### **📂 Dataset Access**
+**Live URL**: [https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing](https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing)
+
+### **📥 Download Instructions**
+1. **Access Folder**: Click the link above
+2. **Download All**: Right-click → "Download" (creates zip file)
+3. **Extract**: Unzip to your `data/` directory
+4. **Verify**: Run `python scripts/validate_data.py`
+
+### **📋 Folder Contents**
+- `synthea/` - Core CSV datasets (12,352 patients)
+- `ccda/` - Clinical documents (109 XML files)
+- Documentation and data guides
 
 ---
 
@@ -53,6 +62,7 @@ For immediate sharing while setting up Zenodo:
 Whatever platform you choose, include these files:
 
 ### **Core Dataset (CSV Files)**
+
 - `patients.csv` (12,352 patients, ~3.4MB)
 - `encounters.csv` (321,528 encounters, ~95MB)
 - `conditions.csv` (114,544 conditions, ~13.5MB)
@@ -71,9 +81,11 @@ Whatever platform you choose, include these files:
 - `payer_transitions.csv` (transitions, ~0.1MB)
 
 ### **Clinical Documents (XML Files)**
+
 - 109 C-CDA XML files (~150MB total)
 
 ### **Documentation**
+
 - Dataset methodology
 - Data dictionary
 - Usage guidelines

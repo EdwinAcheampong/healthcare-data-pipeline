@@ -24,9 +24,9 @@ DATASET_CONFIG = {
         "description": "Zenodo Academic Repository (Recommended)"
     },
     "gdrive": {
-        "url": "https://drive.google.com/uc?export=download&id=YOUR_GOOGLE_DRIVE_FILE_ID",
+        "url": "https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing",
         "size_mb": 651,
-        "description": "Google Drive Mirror"
+        "description": "Google Drive (Currently Available)"
     }
 }
 
