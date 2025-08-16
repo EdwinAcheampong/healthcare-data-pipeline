@@ -1,0 +1,136 @@
+version: '3.8'
+
+services:
+  # Production PostgreSQL with optimized settings
+  postgres:
+    image: postgres:15-alpine
+    container_name: msc_postgres_prod
+    environment:
+      POSTGRES_DB: ${DATABASE_NAME:-msc_project}
+      POSTGRES_USER: ${DATABASE_USER:-postgres}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "${DATABASE_PORT:-5432}:5432"
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+      - ./database/init:/docker-entrypoint-initdb.d:ro
+    command: >
+      postgres -c max_connections=200
+               -c shared_buffers=256MB
+               -c effective_cache_size=1GB
+               -c maintenance_work_mem=64MB
+               -c checkpoint_completion_target=0.9
+               -c wal_buffers=16MB
+               -c default_statistics_target=100
+    restart: unless-stopped
+    networks:
+      - msc_network_prod
+
+  # Production MongoDB with authentication
+  mongodb:
+    image: mongo:6.0
+    container_name: msc_mongodb_prod
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-healthcare_data}
+    ports:
+      - "${MONGO_PORT:-27017}:27017"
+    volumes:
+      - mongodb_data_prod:/data/db
+      - ./database/mongo-init:/docker-entrypoint-initdb.d:ro
+    restart: unless-stopped
+    networks:
+      - msc_network_prod
+
+  # Production Redis with persistence
+  redis:
+    image: redis:7-alpine
+    container_name: msc_redis_prod
+    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data_prod:/data
+    restart: unless-stopped
+    networks:
+      - msc_network_prod
+
+  # Healthcare Analytics API
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    container_name: msc_api_prod
+    environment:
+      - ENVIRONMENT=production
+      - DATABASE_URL=postgresql://${DATABASE_USER:-postgres}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME:-msc_project}
+      - MONGO_URI=mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD}@mongodb:27017/${MONGO_DATABASE:-healthcare_data}
+      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
+      - SECRET_KEY=${API_SECRET_KEY}
+    ports:
+      - "${API_PORT:-8000}:8000"
+    volumes:
+      - ./data:/app/data:ro
+      - ./logs:/app/logs
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+    restart: unless-stopped
+    networks:
+      - msc_network_prod
+
+  # MLflow Tracking Server
+  mlflow:
+    image: python:3.11-slim
+    container_name: msc_mlflow_prod
+    environment:
+      - MLFLOW_BACKEND_STORE_URI=postgresql://${DATABASE_USER:-postgres}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME:-msc_project}
+      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/artifacts
+    ports:
+      - "${MLFLOW_PORT:-5000}:5000"
+    volumes:
+      - mlflow_artifacts_prod:/artifacts
+      - ./requirements.txt:/requirements.txt
+    command: >
+      bash -c "pip install mlflow psycopg2-binary &&
+               mlflow server --host 0.0.0.0 --port 5000 
+                            --backend-store-uri postgresql://${DATABASE_USER:-postgres}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME:-msc_project}
+                            --default-artifact-root /artifacts"
+    depends_on:
+      - postgres
+    restart: unless-stopped
+    networks:
+      - msc_network_prod
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: msc_nginx_prod
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - api
+      - mlflow
+    restart: unless-stopped
+    networks:
+      - msc_network_prod
+
+volumes:
+  postgres_data_prod:
+  mongodb_data_prod:
+  redis_data_prod:
+  mlflow_artifacts_prod:
+
+networks:
+  msc_network_prod:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

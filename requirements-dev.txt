@@ -1,0 +1,45 @@
+# Development and testing dependencies
+# Include all production requirements
+-r requirements.txt
+
+# Testing frameworks
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+pytest-asyncio>=0.21.0
+pytest-xdist>=3.3.0
+
+# Code quality and formatting
+black>=23.7.0
+isort>=5.12.0
+flake8>=6.0.0
+mypy>=1.5.0
+bandit>=1.7.0
+
+# Pre-commit hooks
+pre-commit>=3.4.0
+
+# Documentation
+sphinx>=7.1.0
+sphinx-rtd-theme>=1.3.0
+myst-parser>=2.0.0
+
+# Development tools
+ipython>=8.15.0
+ipdb>=0.13.0
+tox>=4.11.0
+
+# Jupyter development extensions
+jupyterlab-code-formatter>=2.2.0
+jupyterlab-git>=0.41.0
+
+# Performance profiling
+memory-profiler>=0.61.0
+line-profiler>=4.1.0
+
+# Security scanning
+safety>=2.3.0
+
+# Type checking support
+types-requests>=2.31.0
+types-PyYAML>=6.0.0

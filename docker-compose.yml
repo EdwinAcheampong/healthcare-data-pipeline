@@ -1,0 +1,120 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database for structured data
+  postgres:
+    image: postgres:15-alpine
+    container_name: msc_postgres
+    environment:
+      POSTGRES_DB: msc_project
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - msc_network
+
+  # MongoDB for document storage (FHIR resources, etc.)
+  mongodb:
+    image: mongo:6.0
+    container_name: msc_mongodb
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin
+      MONGO_INITDB_DATABASE: healthcare_data
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - msc_network
+
+  # Redis for caching and session storage
+  redis:
+    image: redis:7-alpine
+    container_name: msc_redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - msc_network
+
+  # Jupyter Lab for data analysis
+  jupyter:
+    build:
+      context: .
+      dockerfile: Dockerfile.jupyter
+    container_name: msc_jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work/notebooks
+      - ./data:/home/jovyan/work/data
+      - ./src:/home/jovyan/work/src
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+      - JUPYTER_TOKEN=msc-project-token
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+    networks:
+      - msc_network
+
+  # MLflow for experiment tracking
+  mlflow:
+    image: python:3.11-slim
+    container_name: msc_mlflow
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlruns:/mlruns
+      - ./models:/models
+    command: >
+      bash -c "pip install mlflow && 
+               mlflow server --host 0.0.0.0 --port 5000 --default-artifact-root /models"
+    networks:
+      - msc_network
+
+  # Adminer for database administration
+  adminer:
+    image: adminer:latest
+    container_name: msc_adminer
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+      - mongodb
+    networks:
+      - msc_network
+
+  # HAPI FHIR Server (optional - for FHIR resource management)
+  fhir-server:
+    image: hapiproject/hapi:latest
+    container_name: msc_fhir_server
+    ports:
+      - "8082:8080"
+    environment:
+      - spring.datasource.url=jdbc:postgresql://postgres:5432/msc_project
+      - spring.datasource.username=postgres
+      - spring.datasource.password=postgres
+      - spring.datasource.driverClassName=org.postgresql.Driver
+      - spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.PostgreSQL10Dialect
+    depends_on:
+      - postgres
+    networks:
+      - msc_network
+
+volumes:
+  postgres_data:
+  mongodb_data:
+  redis_data:
+
+networks:
+  msc_network:
+    driver: bridge
+
