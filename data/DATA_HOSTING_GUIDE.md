@@ -37,23 +37,17 @@ Download the complete dataset (651MB) from:
 
 ---
 
-## 🌐 **Google Drive Access (Currently Available)**
+## 🌐 **Alternative: Google Drive (Quick Setup)**
 
-The complete healthcare dataset is immediately available on Google Drive:
+For immediate sharing while setting up Zenodo:
 
-### **📂 Dataset Access**
-**Live URL**: [https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing](https://drive.google.com/drive/folders/1tpU0jugYL3w6cji3zRACPV1qyLB3fAOj?usp=sharing)
-
-### **📥 Download Instructions**
-1. **Access Folder**: Click the link above
-2. **Download All**: Right-click → "Download" (creates zip file)
-3. **Extract**: Unzip to your `data/` directory
-4. **Verify**: Run `python scripts/validate_data.py`
-
-### **📋 Folder Contents**
-- `synthea/` - Core CSV datasets (12,352 patients)
-- `ccda/` - Clinical documents (109 XML files)
-- Documentation and data guides
+1. **Upload to Google Drive**
+2. **Set Sharing**: "Anyone with link can view"
+3. **Get Direct Download Link**:
+   ```
+   Original: https://drive.google.com/file/d/FILE_ID/view
+   Direct:   https://drive.google.com/uc?export=download&id=FILE_ID
+   ```
 
 ---
 

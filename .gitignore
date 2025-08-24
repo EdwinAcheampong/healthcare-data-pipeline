@@ -187,8 +187,12 @@ logs/*
 !logs/.gitkeep
 models/*
 !models/.gitkeep
+!models/phase_2a_test_results.json
+!models/phase_2b_results_latest.json
 mlruns/*
 !mlruns/.gitkeep
+metrics/*
+!metrics/.gitkeep
 
 # Data files - too large for GitHub (650+ MB)
 data/synthea/*

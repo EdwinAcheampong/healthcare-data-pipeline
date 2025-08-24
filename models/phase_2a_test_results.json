@@ -1,0 +1,118 @@
+{
+  "test_summary": {
+    "start_time": "2025-08-23T04:49:54.835907",
+    "end_time": "2025-08-23T04:51:45.852645",
+    "duration_minutes": 1.8502790833333334,
+    "overall_status": "passed",
+    "tests_passed": 5,
+    "total_tests": 5
+  },
+  "test_results": {
+    "feature_engineering": {
+      "status": "passed",
+      "features_created": 30,
+      "data_shape": [
+        1000,
+        33
+      ],
+      "feature_names": [
+        "hour",
+        "day_of_week",
+        "month",
+        "year",
+        "hour_sin"
+      ]
+    },
+    "baseline_models": {
+      "status": "passed",
+      "models_trained": 7,
+      "best_model": "linear_regression",
+      "best_mape": 7.303303842262085e-14,
+      "evaluation_results": {
+        "linear_regression": {
+          "mae": 8.128418573148467e-16,
+          "rmse": 1.0532798941760143e-15,
+          "r2": 1.0,
+          "mape": 7.303303842262085e-14
+        },
+        "ridge_regression": {
+          "mae": 0.0028931048932536213,
+          "rmse": 0.003861363864928727,
+          "r2": 0.999915104848295,
+          "mape": 0.23730563810119665
+        },
+        "lasso_regression": {
+          "mae": 0.2727472975258052,
+          "rmse": 0.362567290522678,
+          "r2": 0.25152262892105803,
+          "mape": 20.205002890104712
+        },
+        "random_forest": {
+          "mae": 0.010102040816326532,
+          "rmse": 0.05088001091002322,
+          "r2": 0.985260056321328,
+          "mape": 0.83078231292517
+        },
+        "gradient_boosting": {
+          "mae": 0.008270798086012639,
+          "rmse": 0.016738212596073946,
+          "r2": 0.9984047836515235,
+          "mape": 0.6119851862890834
+        },
+        "svr": {
+          "mae": 0.16051628158204348,
+          "rmse": 0.1957089969402007,
+          "r2": 0.781916396451168,
+          "mape": 13.339928259301562
+        }
+      }
+    },
+    "advanced_models": {
+      "status": "passed",
+      "models_trained": 5,
+      "best_model": "stacking_regressor",
+      "best_mape": 21.809295215493744,
+      "evaluation_results": {
+        "xgboost": {
+          "mae": 0.3304512015978495,
+          "rmse": 0.45807370141700054,
+          "r2": -0.3038412340298553,
+          "mape": 25.192683352364437
+        },
+        "lightgbm": {
+          "mae": 0.31423354570282275,
+          "rmse": 0.450345388547054,
+          "r2": -0.26021728864289817,
+          "mape": 23.502367455311354
+        },
+        "voting_regressor": {
+          "mae": 0.31546511537652794,
+          "rmse": 0.44681881926126477,
+          "r2": -0.24055752224128502,
+          "mape": 23.65979957645708
+        },
+        "stacking_regressor": {
+          "mae": 0.294236453875217,
+          "rmse": 0.3997278579460225,
+          "r2": 0.007151861527865067,
+          "mape": 21.809295215493744
+        }
+      }
+    },
+    "model_evaluation": {
+      "status": "passed",
+      "baseline_models": 6,
+      "advanced_models": 4,
+      "overall_best": "linear_regression",
+      "overall_best_mape": 7.303303842262085e-14
+    },
+    "complete_pipeline": {
+      "status": "passed",
+      "feature_engineering": true,
+      "baseline_models": true,
+      "advanced_models": true,
+      "model_evaluation": true,
+      "all_tests_passed": true
+    }
+  }
+}

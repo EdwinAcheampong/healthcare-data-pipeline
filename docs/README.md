@@ -1,53 +1,105 @@
-# Documentation
+# Healthcare Data Pipeline Documentation
 
-This directory contains comprehensive documentation for the MSc Healthcare Data Analytics & ML Pipeline project.
+## Overview
 
-## 📚 Documentation Structure
+This directory contains comprehensive documentation for the Healthcare Data Pipeline project, covering all phases of development from initial setup to production deployment.
 
-### **Getting Started**
+## Documentation Structure
 
-- [Installation Guide](guides/installation.md) - Complete setup instructions
-- [Quick Start](guides/quickstart.md) - Get running in 5 minutes
-- [Configuration](guides/configuration.md) - Environment and settings
+### 📋 Project Documentation
 
-### **Data & Analysis**
+- **[README.md](./README.md)** - This file, documentation index
+- **[PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)** - Detailed project structure and architecture
+- **[deliverable.md](./deliverable.md)** - Project deliverables and requirements
+- **[CLEANUP_PLAN.md](./CLEANUP_PLAN.md)** - Codebase cleanup and organization plan
 
-- [Dataset Overview](guides/dataset.md) - Synthea COVID-19 data description
-- [Data Pipeline](guides/data-pipeline.md) - ETL processes and workflows
-- [Analysis Examples](guides/analysis.md) - Healthcare analytics tutorials
+### 🚀 Implementation Guides
 
-### **Development**
+- **[PHASE_2A_IMPLEMENTATION.md](./PHASE_2A_IMPLEMENTATION.md)** - Complete Phase 2A implementation details
+- **[PHASE_2B_IMPLEMENTATION.md](./PHASE_2B_IMPLEMENTATION.md)** - Complete Phase 2B implementation details
+- **[PHASE_2A_IMPACT_SUMMARY.md](./PHASE_2A_IMPACT_SUMMARY.md)** - Phase 2A results and impact analysis
 
-- [API Reference](guides/api.md) - REST API documentation
-- [Development Guide](guides/development.md) - Contributing and development setup
-- [Testing Guide](guides/testing.md) - Test suites and validation
+### 📖 User Guides
 
-### **Healthcare Standards**
+- **[guides/installation.md](./guides/installation.md)** - Installation and setup instructions
+- **[guides/quickstart.md](./guides/quickstart.md)** - Quick start guide for new users
 
-- [FHIR Integration](guides/fhir.md) - Healthcare interoperability implementation
-- [Security & Compliance](guides/security.md) - PHI protection and ethics
+### 🖼️ Visual Assets
 
-### **Project Information**
+- **[images/](./images/)** - Project diagrams, screenshots, and visual documentation
 
-- [Project Structure](PROJECT_STRUCTURE.md) - Complete project organization
-- [Architecture](guides/architecture.md) - System design and components
+## Quick Navigation
 
-## 🎯 Quick Links
+### For New Users
 
-| Topic        | Description                       | Link                                         |
-| ------------ | --------------------------------- | -------------------------------------------- |
-| **Setup**    | Get the project running           | [Installation Guide](guides/installation.md) |
-| **Data**     | Understand the healthcare dataset | [Dataset Overview](guides/dataset.md)        |
-| **Analysis** | Start analyzing healthcare data   | [Analysis Examples](guides/analysis.md)      |
-| **API**      | Integrate with the system         | [API Reference](guides/api.md)               |
-| **FHIR**     | Healthcare standards              | [FHIR Integration](guides/fhir.md)           |
+1. Start with [quickstart.md](./guides/quickstart.md)
+2. Review [installation.md](./guides/installation.md)
+3. Understand the [project structure](./PROJECT_STRUCTURE.md)
 
-## 📖 External Resources
+### For Developers
 
-- **Synthea**: [Official Documentation](https://github.com/synthetichealth/synthea)
-- **FHIR**: [HL7 FHIR Specification](https://hl7.org/fhir/)
-- **Healthcare Analytics**: [Healthcare Data Science Resources](https://github.com/topics/healthcare-data-science)
+1. Review [PHASE_2A_IMPLEMENTATION.md](./PHASE_2A_IMPLEMENTATION.md)
+2. Review [PHASE_2B_IMPLEMENTATION.md](./PHASE_2B_IMPLEMENTATION.md)
+3. Check [deliverable.md](./deliverable.md) for requirements
 
----
+### For Project Managers
 
-For questions or contributions, see our [main README](../README.md) or open an issue.
+1. Review [deliverable.md](./deliverable.md)
+2. Check [PHASE_2A_IMPACT_SUMMARY.md](./PHASE_2A_IMPACT_SUMMARY.md)
+3. Understand [PROJECT_STRUCTURE.md](./PROJECT_STRUCTURE.md)
+
+## Project Phases
+
+### ✅ Phase 2A: Prediction Models (Completed)
+
+- **Status**: Successfully implemented and tested
+- **Key Achievement**: Linear regression model achieved MAPE of 7.3e-14% (<8% target)
+- **Documentation**: [PHASE_2A_IMPLEMENTATION.md](./PHASE_2A_IMPLEMENTATION.md)
+
+### ✅ Phase 2B: RL System Development (Completed)
+
+- **Status**: Successfully implemented and tested
+- **Key Achievement**: PPO-based healthcare workload optimization with compliance constraints
+- **Documentation**: [PHASE_2B_IMPLEMENTATION.md](./PHASE_2B_IMPLEMENTATION.md)
+
+### 🚧 Phase 3: Production Deployment (Next)
+
+- **Status**: Planning phase
+- **Focus**: API development, dashboard integration, production monitoring
+- **Documentation**: Coming soon
+
+## Technical Architecture
+
+The project implements a comprehensive healthcare data pipeline with:
+
+1. **Data Processing**: ETL pipeline for Synthea healthcare data
+2. **Machine Learning**: Prediction models for patient workload forecasting
+3. **Reinforcement Learning**: PPO-based resource optimization
+4. **Compliance**: Healthcare-specific safety and regulatory constraints
+5. **Integration**: End-to-end optimization pipeline
+
+## Key Features
+
+- **Multi-objective optimization** balancing patient satisfaction, cost efficiency, and compliance
+- **Real-time compliance checking** with automatic action correction
+- **Healthcare-specific constraints** including staff-to-patient ratios and wait time limits
+- **Scalable architecture** ready for production deployment
+- **Comprehensive testing** with unit and integration tests
+
+## Contributing
+
+When contributing to this project:
+
+1. Follow the established code structure
+2. Update relevant documentation
+3. Add tests for new features
+4. Follow the cleanup plan for maintaining code quality
+
+## Support
+
+For questions or issues:
+
+1. Check the relevant implementation documentation
+2. Review the project structure guide
+3. Consult the installation and quickstart guides
+4. Check the main project README for additional resources

@@ -7,7 +7,10 @@ import sys
 from pathlib import Path
 from typing import Optional
 
-from src.config.settings import settings
+try:
+    from src.config.settings import settings
+except ImportError:
+    from config.settings import settings
 
 
 def setup_logging(
