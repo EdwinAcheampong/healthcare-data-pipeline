@@ -15,7 +15,7 @@ import os
 from datetime import datetime, timedelta
 
 # Import Phase 2A components
-from .feature_engineering import HealthcareFeatureEngineer
+from .feature_engineering import FeatureEngineer
 from .baseline_models import HealthcareBaselineModels
 from .advanced_models import AdvancedHealthcareModels
 from .model_evaluation import HealthcareModelEvaluator
@@ -80,7 +80,7 @@ class HealthcareWorkloadOptimizer:
         self.config = config or IntegrationConfig()
         
         # Initialize Phase 2A components
-        self.feature_engineer = HealthcareFeatureEngineer()
+        self.feature_engineer = FeatureEngineer()
         self.baseline_models = HealthcareBaselineModels()
         self.advanced_models = AdvancedHealthcareModels()
         self.model_evaluator = HealthcareModelEvaluator()

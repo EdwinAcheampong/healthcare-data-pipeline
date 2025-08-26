@@ -4,15 +4,17 @@ Healthcare ML Models Package.
 This package contains all machine learning models and components for healthcare workload prediction.
 """
 
-from .feature_engineering import HealthcareFeatureEngineer
-from .baseline_models import HealthcareBaselineModels
-from .advanced_models import AdvancedHealthcareModels
+from .feature_engineering import FeatureEngineer
+from .baseline_models import HealthcareBaselineModels, BaselinePredictor
+from .advanced_models import AdvancedHealthcareModels, AdvancedPredictor
 from .model_evaluation import HealthcareModelEvaluator
 
 __all__ = [
-    'HealthcareFeatureEngineer',
-    'HealthcareBaselineModels', 
+    'FeatureEngineer',
+    'HealthcareBaselineModels',
+    'BaselinePredictor',
     'AdvancedHealthcareModels',
+    'AdvancedPredictor',
     'HealthcareModelEvaluator'
 ]
 

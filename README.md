@@ -96,7 +96,30 @@ This healthcare data pipeline implements a comprehensive solution for healthcare
 └─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-## 📁 **Project Structure**
+## 📁 **Clean Project Structure**
+
+The project follows best practices with a clean, organized structure:
+
+```
+healthcare-data-pipeline/
+├── 📁 data/                    # Healthcare data files
+├── 📁 docs/                   # Complete documentation
+├── 📁 logs/                   # Application logs
+├── 📁 metrics/                # Performance metrics
+├── 📁 models/                 # Trained ML models
+├── 📁 notebooks/              # Jupyter notebooks
+├── 📁 reports/                # Generated reports
+├── 📁 scripts/                # Utility scripts
+├── 📁 src/                    # Source code
+├── 📁 tests/                  # Test files
+├── 📄 docker-compose.yml      # Development setup
+├── 📄 docker-compose.prod.yml # Production setup
+├── 📄 Dockerfile              # Application container
+├── 📄 README.md               # This file
+└── 📄 requirements.txt        # Dependencies
+```
+
+**📚 [Complete Project Structure](docs/PROJECT_STRUCTURE.md)**
 
 ```
 healthcare-data-pipeline/

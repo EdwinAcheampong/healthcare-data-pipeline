@@ -1,136 +1,248 @@
-version: '3.8'
+version: "3.8"
 
 services:
-  # Production PostgreSQL with optimized settings
-  postgres:
-    image: postgres:15-alpine
-    container_name: msc_postgres_prod
-    environment:
-      POSTGRES_DB: ${DATABASE_NAME:-msc_project}
-      POSTGRES_USER: ${DATABASE_USER:-postgres}
-      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
-      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
-    ports:
-      - "${DATABASE_PORT:-5432}:5432"
-    volumes:
-      - postgres_data_prod:/var/lib/postgresql/data
-      - ./database/init:/docker-entrypoint-initdb.d:ro
-    command: >
-      postgres -c max_connections=200
-               -c shared_buffers=256MB
-               -c effective_cache_size=1GB
-               -c maintenance_work_mem=64MB
-               -c checkpoint_completion_target=0.9
-               -c wal_buffers=16MB
-               -c default_statistics_target=100
-    restart: unless-stopped
-    networks:
-      - msc_network_prod
-
-  # Production MongoDB with authentication
-  mongodb:
-    image: mongo:6.0
-    container_name: msc_mongodb_prod
-    environment:
-      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USER:-admin}
-      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
-      MONGO_INITDB_DATABASE: ${MONGO_DATABASE:-healthcare_data}
-    ports:
-      - "${MONGO_PORT:-27017}:27017"
-    volumes:
-      - mongodb_data_prod:/data/db
-      - ./database/mongo-init:/docker-entrypoint-initdb.d:ro
-    restart: unless-stopped
-    networks:
-      - msc_network_prod
-
-  # Production Redis with persistence
-  redis:
-    image: redis:7-alpine
-    container_name: msc_redis_prod
-    command: redis-server --appendonly yes --requirepass ${REDIS_PASSWORD}
-    ports:
-      - "${REDIS_PORT:-6379}:6379"
-    volumes:
-      - redis_data_prod:/data
-    restart: unless-stopped
-    networks:
-      - msc_network_prod
-
-  # Healthcare Analytics API
+  # Healthcare Data Pipeline API
   api:
     build:
       context: .
-      dockerfile: Dockerfile.api
-    container_name: msc_api_prod
+      dockerfile: Dockerfile
+    container_name: healthcare_api_prod
+    ports:
+      - "8000:8000"
     environment:
       - ENVIRONMENT=production
-      - DATABASE_URL=postgresql://${DATABASE_USER:-postgres}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME:-msc_project}
-      - MONGO_URI=mongodb://${MONGO_USER:-admin}:${MONGO_PASSWORD}@mongodb:27017/${MONGO_DATABASE:-healthcare_data}
-      - REDIS_URL=redis://:${REDIS_PASSWORD}@redis:6379/0
-      - SECRET_KEY=${API_SECRET_KEY}
-    ports:
-      - "${API_PORT:-8000}:8000"
-    volumes:
-      - ./data:/app/data:ro
-      - ./logs:/app/logs
+      - DATABASE_URL=postgresql://healthcare_user:healthcare_pass@db:5432/healthcare_prod
+      - REDIS_URL=redis://redis:6379
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - CORS_ORIGINS=${CORS_ORIGINS}
+      - LOG_LEVEL=INFO
     depends_on:
-      - postgres
-      - mongodb
+      - db
       - redis
-    restart: unless-stopped
     networks:
-      - msc_network_prod
+      - healthcare_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
 
-  # MLflow Tracking Server
+  # PostgreSQL Database
+  db:
+    image: postgres:15-alpine
+    container_name: healthcare_db_prod
+    environment:
+      POSTGRES_DB: healthcare_prod
+      POSTGRES_USER: healthcare_user
+      POSTGRES_PASSWORD: healthcare_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init-scripts:/docker-entrypoint-initdb.d
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U healthcare_user -d healthcare_prod"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: healthcare_redis_prod
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # MongoDB for document storage
+  mongodb:
+    image: mongo:6.0
+    container_name: healthcare_mongodb_prod
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: admin_pass
+      MONGO_INITDB_DATABASE: healthcare_data
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+
+  # MLflow for experiment tracking
   mlflow:
     image: python:3.11-slim
-    container_name: msc_mlflow_prod
-    environment:
-      - MLFLOW_BACKEND_STORE_URI=postgresql://${DATABASE_USER:-postgres}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME:-msc_project}
-      - MLFLOW_DEFAULT_ARTIFACT_ROOT=/artifacts
+    container_name: healthcare_mlflow_prod
     ports:
-      - "${MLFLOW_PORT:-5000}:5000"
+      - "5000:5000"
     volumes:
-      - mlflow_artifacts_prod:/artifacts
-      - ./requirements.txt:/requirements.txt
+      - ./mlruns:/mlruns
+      - ./models:/models
     command: >
-      bash -c "pip install mlflow psycopg2-binary &&
-               mlflow server --host 0.0.0.0 --port 5000 
-                            --backend-store-uri postgresql://${DATABASE_USER:-postgres}:${DATABASE_PASSWORD}@postgres:5432/${DATABASE_NAME:-msc_project}
-                            --default-artifact-root /artifacts"
-    depends_on:
-      - postgres
-    restart: unless-stopped
+      bash -c "pip install mlflow && 
+               mlflow server --host 0.0.0.0 --port 5000 --default-artifact-root /models"
     networks:
-      - msc_network_prod
+      - healthcare_network
+    restart: unless-stopped
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: healthcare_prometheus_prod
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=200h"
+      - "--web.enable-lifecycle"
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+
+  # Grafana for visualization
+  grafana:
+    image: grafana/grafana:latest
+    container_name: healthcare_grafana_prod
+    ports:
+      - "3001:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+
+  # AlertManager for alerting
+  alertmanager:
+    image: prom/alertmanager:latest
+    container_name: healthcare_alertmanager_prod
+    ports:
+      - "9093:9093"
+    volumes:
+      - ./monitoring/alertmanager.yml:/etc/alertmanager/alertmanager.yml
+      - alertmanager_data:/alertmanager
+    command:
+      - "--config.file=/etc/alertmanager/alertmanager.yml"
+      - "--storage.path=/alertmanager"
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+
+  # Jaeger for distributed tracing
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: healthcare_jaeger_prod
+    ports:
+      - "16686:16686"
+      - "14268:14268"
+    environment:
+      - COLLECTOR_OTLP_ENABLED=true
+    networks:
+      - healthcare_network
+    restart: unless-stopped
 
   # Nginx reverse proxy
   nginx:
     image: nginx:alpine
-    container_name: msc_nginx_prod
+    container_name: healthcare_nginx_prod
     ports:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
-      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./nginx/ssl:/etc/nginx/ssl
     depends_on:
       - api
-      - mlflow
-    restart: unless-stopped
     networks:
-      - msc_network_prod
+      - healthcare_network
+    restart: unless-stopped
+
+  # Elasticsearch for log aggregation
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:8.8.0
+    container_name: healthcare_elasticsearch_prod
+    environment:
+      - discovery.type=single-node
+      - xpack.security.enabled=false
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ports:
+      - "9200:9200"
+    volumes:
+      - elasticsearch_data:/usr/share/elasticsearch/data
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+
+  # Kibana for log visualization
+  kibana:
+    image: docker.elastic.co/kibana/kibana:8.8.0
+    container_name: healthcare_kibana_prod
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+    ports:
+      - "5601:5601"
+    depends_on:
+      - elasticsearch
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+
+  # Filebeat for log collection
+  filebeat:
+    image: docker.elastic.co/beats/filebeat:8.8.0
+    container_name: healthcare_filebeat_prod
+    volumes:
+      - ./monitoring/filebeat.yml:/usr/share/filebeat/filebeat.yml:ro
+      - /var/lib/docker/containers:/var/lib/docker/containers:ro
+      - /var/log/docker:/var/log/docker:ro
+    depends_on:
+      - elasticsearch
+    networks:
+      - healthcare_network
+    restart: unless-stopped
 
 volumes:
-  postgres_data_prod:
-  mongodb_data_prod:
-  redis_data_prod:
-  mlflow_artifacts_prod:
+  postgres_data:
+    driver: local
+  redis_data:
+    driver: local
+  mongodb_data:
+    driver: local
+  prometheus_data:
+    driver: local
+  grafana_data:
+    driver: local
+  alertmanager_data:
+    driver: local
+  elasticsearch_data:
+    driver: local
 
 networks:
-  msc_network_prod:
+  healthcare_network:
     driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16

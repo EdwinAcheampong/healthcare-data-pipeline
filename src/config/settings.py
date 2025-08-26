@@ -14,6 +14,7 @@ class DatabaseSettings(BaseSettings):
     """Database configuration settings."""
     
     url: str = Field(default="postgresql://postgres:postgres@localhost:5432/msc_project")
+    database_url: str = Field(default="postgresql://postgres:postgres@localhost:5432/msc_project")
     mongo_uri: str = Field(default="mongodb://localhost:27017/healthcare_data")
     redis_url: str = Field(default="redis://localhost:6379/0")
     
@@ -28,6 +29,9 @@ class APISettings(BaseSettings):
     port: int = Field(default=8000)
     secret_key: str = Field(default="development-secret-key")
     jwt_secret_key: str = Field(default="jwt-development-secret")
+    cors_origins: list = Field(default=["http://localhost:3000", "http://localhost:8080"])
+    allowed_hosts: list = Field(default=["localhost", "127.0.0.1"])
+    log_level: str = Field(default="INFO")
     
     class Config:
         env_prefix = "API_"

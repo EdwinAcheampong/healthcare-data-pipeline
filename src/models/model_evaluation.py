@@ -22,7 +22,7 @@ import seaborn as sns
 # Import our model classes
 from .baseline_models import HealthcareBaselineModels
 from .advanced_models import AdvancedHealthcareModels
-from .feature_engineering import HealthcareFeatureEngineer
+from .feature_engineering import FeatureEngineer
 
 import warnings
 warnings.filterwarnings('ignore')
@@ -35,7 +35,7 @@ class HealthcareModelEvaluator:
         self.logger = logging.getLogger(__name__)
         self.baseline_models = HealthcareBaselineModels()
         self.advanced_models = AdvancedHealthcareModels()
-        self.feature_engineer = HealthcareFeatureEngineer()
+        self.feature_engineer = FeatureEngineer()
         
         self.all_results = {}
         self.comparison_results = {}

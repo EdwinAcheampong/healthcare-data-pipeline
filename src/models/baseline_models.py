@@ -413,3 +413,53 @@ class HealthcareBaselineModels:
                 recommendations.append("ARIMA captures temporal patterns well. Consider hybrid approaches.")
         
         return recommendations
+
+
+class BaselinePredictor:
+    """Baseline predictor for API integration."""
+    
+    def __init__(self):
+        self.logger = logging.getLogger(__name__)
+        self.model = None
+        self.scaler = StandardScaler()
+        self.is_trained = False
+        
+    def fit(self, X, y):
+        """Train the baseline model."""
+        self.logger.info("Training baseline predictor")
+        
+        # Scale features
+        X_scaled = self.scaler.fit_transform(X)
+        
+        # Use Random Forest as baseline
+        self.model = RandomForestRegressor(
+            n_estimators=100,
+            max_depth=10,
+            random_state=42
+        )
+        
+        self.model.fit(X_scaled, y)
+        self.is_trained = True
+        self.logger.info("Baseline predictor trained successfully")
+        
+    def predict(self, X):
+        """Make predictions."""
+        if not self.is_trained:
+            raise ValueError("Model must be trained before making predictions")
+        
+        # Scale features
+        X_scaled = self.scaler.transform(X)
+        
+        # Make prediction
+        predictions = self.model.predict(X_scaled)
+        return predictions
+    
+    def get_feature_importance(self):
+        """Get feature importance scores."""
+        if not self.is_trained:
+            return {}
+        
+        return dict(zip(
+            range(self.model.n_features_in_),
+            self.model.feature_importances_
+        ))

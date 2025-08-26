@@ -1,0 +1,192 @@
+{
+  "test_summary": {
+    "total_tests": 8,
+    "passed_tests": 6,
+    "failed_tests": 2,
+    "success_rate": "75.0%",
+    "total_execution_time": "29.26s"
+  },
+  "test_results": {
+    "Data Quality and Availability": {
+      "success": false,
+      "details": "Data quality validation completed with 321528 records",
+      "metrics": {
+        "total_records": 321528,
+        "date_range": "1910-06-26 16:46:17+00:00 to 2020-05-27 19:46:05+00:00",
+        "null_records": "500552",
+        "duplicate_records": "0",
+        "missing_columns": 0,
+        "data_freshness_days": 1915
+      },
+      "timestamp": "2025-08-24 23:48:44.994241"
+    },
+    "Feature Engineering (Production)": {
+      "success": true,
+      "details": "Feature engineering completed with 1000 samples and 8 features",
+      "metrics": {
+        "extracted_features": 15,
+        "training_samples": 1000,
+        "feature_dimensions": 8,
+        "target_range": "0.00 - 189.96",
+        "feature_names": [
+          "hour",
+          "day_of_week",
+          "month",
+          "is_weekend",
+          "is_holiday_season",
+          "is_summer",
+          "peak_hour",
+          "emergency_hour"
+        ],
+        "data_balance": "45.87 (std)"
+      },
+      "timestamp": "2025-08-24 23:48:46.644616"
+    },
+    "Model Training (Production)": {
+      "success": true,
+      "details": "Models trained successfully with 1000 samples",
+      "metrics": {
+        "baseline_training_time": "1.73s",
+        "advanced_training_time": "5.84s",
+        "baseline_rmse": "6.71",
+        "advanced_rmse": "3.21",
+        "baseline_top_feature": "0",
+        "advanced_top_feature": "0",
+        "training_samples": 1000
+      },
+      "timestamp": "2025-08-24 23:48:56.046430"
+    },
+    "Prediction Accuracy": {
+      "success": true,
+      "details": "Tested 3 realistic scenarios",
+      "metrics": {
+        "avg_baseline_prediction": "44.70",
+        "avg_advanced_prediction": "42.69",
+        "prediction_variance": "3114.42",
+        "max_prediction_difference": "3.38",
+        "scenarios_tested": 3
+      },
+      "timestamp": "2025-08-24 23:48:56.149164"
+    },
+    "Optimization Algorithms": {
+      "success": true,
+      "details": "Optimized 3 workload scenarios",
+      "metrics": {
+        "avg_efficiency_gain": "-18.33%",
+        "avg_confidence": "0.92",
+        "total_recommendations": 3,
+        "scenarios_optimized": 3,
+        "max_efficiency_gain": "-13.33%"
+      },
+      "timestamp": "2025-08-24 23:49:00.378528"
+    },
+    "API Integration": {
+      "success": false,
+      "details": "Error: 'WorkloadOptimizationRequest' object has no attribute 'optimization_goals'",
+      "metrics": {},
+      "timestamp": "2025-08-24 23:49:00.393472"
+    },
+    "End-to-End Workflow": {
+      "success": true,
+      "details": "Complete end-to-end workflow executed successfully",
+      "metrics": {
+        "total_workflow_time": "4.73s",
+        "data_load_time": "2.13s",
+        "training_time": "2.57s",
+        "prediction_time": "0.03s",
+        "optimization_time": "0.00s",
+        "results_time": "0.00s",
+        "baseline_prediction": "109.98",
+        "advanced_prediction": "118.55",
+        "recommended_staff": 10,
+        "efficiency_gain": "-16.67%"
+      },
+      "timestamp": "2025-08-24 23:49:05.129726"
+    },
+    "Performance Benchmarks": {
+      "success": true,
+      "details": "Performance benchmarks completed",
+      "metrics": {
+        "data_processing_time": "1.09s",
+        "model_training_time": "0.90s",
+        "prediction_throughput": "29.4 predictions/sec",
+        "memory_usage": "775.5 MB",
+        "training_samples": 1000,
+        "feature_dimensions": 8
+      },
+      "timestamp": "2025-08-24 23:49:10.596073"
+    }
+  },
+  "metrics_summary": {
+    "Data Quality and Availability": {
+      "total_records": 321528,
+      "date_range": "1910-06-26 16:46:17+00:00 to 2020-05-27 19:46:05+00:00",
+      "null_records": "500552",
+      "duplicate_records": "0",
+      "missing_columns": 0,
+      "data_freshness_days": 1915
+    },
+    "Feature Engineering (Production)": {
+      "extracted_features": 15,
+      "training_samples": 1000,
+      "feature_dimensions": 8,
+      "target_range": "0.00 - 189.96",
+      "feature_names": [
+        "hour",
+        "day_of_week",
+        "month",
+        "is_weekend",
+        "is_holiday_season",
+        "is_summer",
+        "peak_hour",
+        "emergency_hour"
+      ],
+      "data_balance": "45.87 (std)"
+    },
+    "Model Training (Production)": {
+      "baseline_training_time": "1.73s",
+      "advanced_training_time": "5.84s",
+      "baseline_rmse": "6.71",
+      "advanced_rmse": "3.21",
+      "baseline_top_feature": "0",
+      "advanced_top_feature": "0",
+      "training_samples": 1000
+    },
+    "Prediction Accuracy": {
+      "avg_baseline_prediction": "44.70",
+      "avg_advanced_prediction": "42.69",
+      "prediction_variance": "3114.42",
+      "max_prediction_difference": "3.38",
+      "scenarios_tested": 3
+    },
+    "Optimization Algorithms": {
+      "avg_efficiency_gain": "-18.33%",
+      "avg_confidence": "0.92",
+      "total_recommendations": 3,
+      "scenarios_optimized": 3,
+      "max_efficiency_gain": "-13.33%"
+    },
+    "End-to-End Workflow": {
+      "total_workflow_time": "4.73s",
+      "data_load_time": "2.13s",
+      "training_time": "2.57s",
+      "prediction_time": "0.03s",
+      "optimization_time": "0.00s",
+      "results_time": "0.00s",
+      "baseline_prediction": "109.98",
+      "advanced_prediction": "118.55",
+      "recommended_staff": 10,
+      "efficiency_gain": "-16.67%"
+    },
+    "Performance Benchmarks": {
+      "data_processing_time": "1.09s",
+      "model_training_time": "0.90s",
+      "prediction_throughput": "29.4 predictions/sec",
+      "memory_usage": "775.5 MB",
+      "training_samples": 1000,
+      "feature_dimensions": 8
+    }
+  },
+  "production_status": "NEEDS_ATTENTION",
+  "timestamp": "2025-08-24T23:49:10.596182"
+}
