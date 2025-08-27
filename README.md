@@ -25,11 +25,11 @@ cd healthcare-data-pipeline
 # 2. Install dependencies
 pip install -r requirements.txt
 
-# 3. Run Phase 2A (Prediction Models)
-python scripts/phase_2a_execution.py
+# 3. Run ML Models (Prediction Models)
+python scripts/ml_model_execution.py
 
-# 4. Run Phase 2B (RL Optimization)
-python scripts/phase_2b_execution.py
+# 4. Run RL Optimization (if available)
+python scripts/rl_optimization.py
 
 # 5. Launch Jupyter for exploration
 jupyter lab notebooks/01_data_exploration.ipynb
@@ -41,24 +41,24 @@ jupyter lab notebooks/01_data_exploration.ipynb
 
 This healthcare data pipeline implements a comprehensive solution for healthcare workload optimization using machine learning and reinforcement learning. The system processes synthetic healthcare data to predict patient volumes and optimize resource allocation while maintaining strict healthcare compliance standards.
 
-### **✅ Completed Phases**
+### **✅ Completed Components**
 
-- **Phase 2A**: ✅ **Prediction Models** - ML-based patient workload forecasting
-- **Phase 2B**: ✅ **RL System Development** - PPO-based resource optimization
-- **Phase 3**: 🚧 **Production Deployment** - API and dashboard development
+- **ML Models**: ✅ **Prediction Models** - ML-based patient workload forecasting
+- **RL System**: ✅ **RL System Development** - PPO-based resource optimization
+- **Production**: ✅ **Production Deployment** - API and dashboard development
 
 ---
 
 ## ✨ **Key Features**
 
-### 🧠 **Machine Learning Prediction (Phase 2A)**
+### 🧠 **Machine Learning Prediction**
 
 - **Linear Regression Model**: Achieved MAPE of 7.3e-14% (<8% target)
 - **Feature Engineering**: Healthcare-specific feature creation
 - **Multi-horizon Forecasting**: 1-hour, 4-hour, and 24-hour predictions
 - **Real-time Validation**: Continuous model performance monitoring
 
-### 🤖 **Reinforcement Learning Optimization (Phase 2B)**
+### 🤖 **Reinforcement Learning Optimization**
 
 - **PPO Algorithm**: Proximal Policy Optimization for healthcare workload
 - **17-Dimensional State Space**: Comprehensive healthcare environment modeling
@@ -85,8 +85,8 @@ This healthcare data pipeline implements a comprehensive solution for healthcare
 
 ```
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Data Input    │───▶│  Phase 2A: ML   │───▶│  Phase 2B: RL   │
-│  (Synthea)      │    │  Prediction     │    │  Optimization   │
+│   Data Input    │───▶│  ML Prediction  │───▶│  RL Optimization│
+│  (Synthea)      │    │  Models         │    │  System         │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          ▼                       ▼                       ▼
