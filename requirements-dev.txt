@@ -29,6 +29,12 @@ ipython>=8.15.0
 ipdb>=0.13.0
 tox>=4.11.0
 
+# Jupyter & Notebooks
+jupyter>=1.0.0
+jupyterlab>=4.0.0
+notebook>=7.0.0
+ipywidgets>=8.1.0
+
 # Jupyter development extensions
 jupyterlab-code-formatter>=2.2.0
 jupyterlab-git>=0.41.0

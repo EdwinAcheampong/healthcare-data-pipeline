@@ -4,11 +4,12 @@ ETL Pipeline for Healthcare Data Processing.
 This module implements the core ETL pipeline for processing Synthea healthcare data
 with PHI removal, data validation, and feature engineering capabilities.
 """
-
+import sys
+from pathlib import Path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
 import logging
 import pandas as pd
 from datetime import datetime
-from pathlib import Path
 from typing import Dict, List, Any
 import hashlib
 
@@ -16,10 +17,7 @@ from pydantic import BaseModel, validator
 import pyarrow as pa
 import pyarrow.parquet as pq
 
-try:
-    from ..config.settings import settings
-except ImportError:
-    from config.settings import settings
+from config.settings import settings
 
 
 class DataQualityMetrics(BaseModel):
