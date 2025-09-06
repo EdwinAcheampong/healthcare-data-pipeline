@@ -3,85 +3,38 @@ pandas>=2.1.0
 numpy>=1.24.0
 scipy>=1.11.0
 scikit-learn>=1.3.0
-
 # Data Visualization
 matplotlib>=3.7.0
 seaborn>=0.12.0
 plotly>=5.15.0
-bokeh>=3.2.0
-
 # Database & Data Storage
 sqlalchemy>=2.0.0
 psycopg2-binary>=2.9.0
-pymongo>=4.5.0
 redis>=4.6.0
-
 # Data Pipeline & ETL
-dask>=2023.8.0
-
 # Storage & Data Formats
 pyarrow>=13.0.0
 parquet>=1.3.1
-influxdb-client>=1.38.0
-tables>=3.8.0
-
 # Machine Learning & AI
 torch>=2.0.0
-transformers>=4.33.0
 xgboost>=1.7.0
 lightgbm>=4.0.0
-
 # Reinforcement Learning (Phase 2B)
-gym>=0.26.0
 gymnasium
-stable-baselines3>=2.1.0
-ray[rllib]>=2.7.0
-
 # Medical NLP & Text Processing
-nltk>=3.8.0
-spacy>=3.6.0
-scispacy>=0.5.0
-medspacy>=1.0.0
-
 # API Development
 fastapi>=0.103.0
 uvicorn>=0.23.0
-requests>=2.31.0
-
 # Data Validation & Quality
 pydantic>=2.3.0
-
 # Configuration & Environment
 python-dotenv>=1.0.0
-pyyaml>=6.0.0
 click>=8.1.0
-rich>=13.5.0
-
 # Cloud & Deployment
-boto3>=1.28.0
-azure-storage-blob>=12.17.0
-google-cloud-storage>=2.10.0
-docker>=6.1.0
-
 # Monitoring & Logging
-prometheus-client>=0.17.0
-structlog>=23.1.0
-sentry-sdk>=1.30.0
-
 # Security & Authentication
-cryptography>=41.0.0
-PyJWT>=2.8.0
-bcrypt>=4.0.0
-
 # Time Series Analysis
 statsmodels>=0.14.0
-
 # Performance & Optimization
-numba>=0.57.0
 joblib>=1.3.0
-cython>=3.0.0
-
 # Additional Pipeline Dependencies
-holidays>=0.34
-faker>=19.6.0
-tqdm>=4.66.0

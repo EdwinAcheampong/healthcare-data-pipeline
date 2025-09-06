@@ -70,27 +70,27 @@ class MLModelExecutor:
         
         try:
             # Step 1: Real Data Loading
-            self.logger.info("📊 Step 1: Real Healthcare Data Loading")
+            self.logger.info("Step 1: Real Healthcare Data Loading")
             data_results = self._load_real_data()
             
             # Step 2: Real Data Feature Engineering
-            self.logger.info("🔧 Step 2: Real Data Feature Engineering")
+            self.logger.info("Step 2: Real Data Feature Engineering")
             feature_results = self._run_real_feature_engineering()
             
             # Step 3: Baseline Model Training with Real Data
-            self.logger.info("📈 Step 3: Baseline Model Training with Real Data")
+            self.logger.info("Step 3: Baseline Model Training with Real Data")
             baseline_results = self._run_baseline_models_real_data()
             
             # Step 4: Advanced Model Training with Real Data
-            self.logger.info("🧠 Step 4: Advanced Model Training with Real Data")
+            self.logger.info("Step 4: Advanced Model Training with Real Data")
             advanced_results = self._run_advanced_models_real_data()
             
             # Step 5: Model Evaluation and Comparison with Real Data
-            self.logger.info("📊 Step 5: Model Evaluation and Comparison with Real Data")
+            self.logger.info("Step 5: Model Evaluation and Comparison with Real Data")
             evaluation_results = self._run_model_evaluation_real_data()
             
             # Step 6: Generate Reports with Real Metrics
-            self.logger.info("📋 Step 6: Report Generation with Real Metrics")
+            self.logger.info("Step 6: Report Generation with Real Metrics")
             report_results = self._generate_real_reports()
             
             # Compile final results
@@ -105,11 +105,11 @@ class MLModelExecutor:
                 'status': 'SUCCESS'
             }
             
-            self.logger.info("🎉 Phase 2A with REAL data completed successfully!")
+            self.logger.info("Phase 2A with REAL data completed successfully!")
             return self.results
             
         except Exception as e:
-            self.logger.error(f"❌ Phase 2A with REAL data failed: {e}")
+            self.logger.error(f"Phase 2A with REAL data failed: {e}")
             self.results['status'] = 'FAILED'
             self.results['error'] = str(e)
             return self.results
@@ -148,7 +148,7 @@ class MLModelExecutor:
                 'observations_columns': list(observations_df.columns)
             }
             
-            self.logger.info(f"✅ REAL data loaded successfully:")
+            self.logger.info(f"REAL data loaded successfully:")
             self.logger.info(f"  - Encounters: {data_stats['encounters_count']:,}")
             self.logger.info(f"  - Patients: {data_stats['patients_count']:,}")
             self.logger.info(f"  - Conditions: {data_stats['conditions_count']:,}")
@@ -162,7 +162,7 @@ class MLModelExecutor:
             }
             
         except Exception as e:
-            self.logger.error(f"❌ REAL data loading failed: {e}")
+            self.logger.error(f"REAL data loading failed: {e}")
             return {'status': 'FAILED', 'error': str(e)}
     
     def _create_real_training_data(self) -> tuple:
@@ -248,7 +248,7 @@ class MLModelExecutor:
             X = X[mask]
             y = y[mask]
             
-            self.logger.info(f"✅ Real training data created:")
+            self.logger.info(f"Real training data created:")
             self.logger.info(f"  - Features: {len(feature_columns)}")
             self.logger.info(f"  - Samples: {len(X):,}")
             self.logger.info(f"  - Feature names: {feature_columns}")
@@ -258,7 +258,7 @@ class MLModelExecutor:
             return X, y, feature_columns
             
         except Exception as e:
-            self.logger.error(f"❌ Real training data creation failed: {e}")
+            self.logger.error(f"Real training data creation failed: {e}")
             raise e  # Don't fallback to synthetic data - fix the issue instead
     
     def _run_real_feature_engineering(self) -> Dict[str, Any]:
@@ -289,7 +289,7 @@ class MLModelExecutor:
                 'encounter_range': f"{X[:, 1].min():.0f} - {X[:, 1].max():.0f}"
             }
             
-            self.logger.info(f"✅ Real feature engineering completed:")
+            self.logger.info(f"Real feature engineering completed:")
             self.logger.info(f"  - Features extracted: {feature_stats['features_extracted']}")
             self.logger.info(f"  - Training samples: {feature_stats['training_samples']:,}")
             self.logger.info(f"  - Feature dimensions: {feature_stats['feature_dimensions']}")
@@ -305,7 +305,7 @@ class MLModelExecutor:
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Real feature engineering failed: {e}")
+            self.logger.error(f"Real feature engineering failed: {e}")
             return {'status': 'FAILED', 'error': str(e)}
     
     def _run_baseline_models_real_data(self) -> Dict[str, Any]:
@@ -356,7 +356,7 @@ class MLModelExecutor:
                 'feature_names': feature_names
             }
             
-            self.logger.info(f"✅ Baseline models trained with REAL data:")
+            self.logger.info(f"Baseline models trained with REAL data:")
             self.logger.info(f"  - Model: {baseline_stats['model_type']}")
             self.logger.info(f"  - MAE: {mae:.4f}")
             self.logger.info(f"  - MSE: {mse:.4f}")
@@ -371,7 +371,7 @@ class MLModelExecutor:
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Baseline model training with REAL data failed: {e}")
+            self.logger.error(f"Baseline model training with REAL data failed: {e}")
             return {'status': 'FAILED', 'error': str(e)}
     
     def _run_advanced_models_real_data(self) -> Dict[str, Any]:
@@ -422,7 +422,7 @@ class MLModelExecutor:
                 'feature_names': feature_names
             }
             
-            self.logger.info(f"✅ Advanced models trained with REAL data:")
+            self.logger.info(f"Advanced models trained with REAL data:")
             self.logger.info(f"  - Model: {advanced_stats['model_type']}")
             self.logger.info(f"  - MAE: {mae:.4f}")
             self.logger.info(f"  - MSE: {mse:.4f}")
@@ -437,7 +437,7 @@ class MLModelExecutor:
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Advanced model training with REAL data failed: {e}")
+            self.logger.error(f"Advanced model training with REAL data failed: {e}")
             return {'status': 'FAILED', 'error': str(e)}
     
     def _run_model_evaluation_real_data(self) -> Dict[str, Any]:
@@ -501,7 +501,7 @@ class MLModelExecutor:
                 'data_source': 'REAL_HEALTHCARE_DATA'
             }
             
-            self.logger.info(f"✅ Model evaluation completed with REAL data:")
+            self.logger.info(f"Model evaluation completed with REAL data:")
             self.logger.info(f"  - Baseline MAE: {baseline_mae:.4f}, R²: {baseline_r2:.4f}")
             self.logger.info(f"  - Advanced MAE: {advanced_mae:.4f}, R²: {advanced_r2:.4f}")
             self.logger.info(f"  - Best model: {evaluation_stats['comparison']['best_model']}")
@@ -513,7 +513,7 @@ class MLModelExecutor:
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Model evaluation with REAL data failed: {e}")
+            self.logger.error(f"Model evaluation with REAL data failed: {e}")
             return {'status': 'FAILED', 'error': str(e)}
     
     def _generate_real_reports(self) -> Dict[str, Any]:
@@ -560,7 +560,7 @@ class MLModelExecutor:
             with open(report_path, 'w') as f:
                 json.dump(report, f, indent=2, default=str)
             
-            self.logger.info(f"✅ Report with REAL metrics generated and saved to: {report_path}")
+            self.logger.info(f"Report with REAL metrics generated and saved to: {report_path}")
             
             return {
                 'status': 'SUCCESS',
@@ -569,13 +569,13 @@ class MLModelExecutor:
             }
             
         except Exception as e:
-            self.logger.error(f"❌ Report generation with REAL metrics failed: {e}")
+            self.logger.error(f"Report generation with REAL metrics failed: {e}")
             return {'status': 'FAILED', 'error': str(e)}
 
 
 def main():
     """Main execution function."""
-    logger.info("🏥 Starting ML Model Execution")
+    logger.info("Starting ML Model Execution")
     logger.info("=" * 60)
     
     executor = MLModelExecutor()
@@ -583,20 +583,20 @@ def main():
     
     # Print summary
     logger.info("=" * 60)
-    logger.info("📋 ML Model Execution Summary:")
+    logger.info("ML Model Execution Summary:")
     
     for step, result in results.items():
         if step != 'status' and step != 'execution_time':
-            status = "✅ SUCCESS" if result.get('status') == 'SUCCESS' else "❌ FAILED"
+            status = "SUCCESS" if result.get('status') == 'SUCCESS' else "FAILED"
             logger.info(f"  {step}: {status}")
     
-    logger.info(f"⏱️  Total execution time: {results.get('execution_time', 'Unknown')}")
+    logger.info(f"Total execution time: {results.get('execution_time', 'Unknown')}")
     
     if results.get('status') == 'SUCCESS':
-        logger.info("🎉 ML Model execution completed successfully!")
-        logger.info("📊 Check the generated report for detailed metrics.")
+        logger.info("ML Model execution completed successfully!")
+        logger.info("Check the generated report for detailed metrics.")
     else:
-        logger.error("⚠️ ML Model execution failed. Check the logs above.")
+        logger.error("ML Model execution failed. Check the logs above.")
     
     return results.get('status') == 'SUCCESS'
 

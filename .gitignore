@@ -206,3 +206,5 @@ data/raw/*
 
 # Keep documentation in data folder
 !data/*.md
+
+reports/

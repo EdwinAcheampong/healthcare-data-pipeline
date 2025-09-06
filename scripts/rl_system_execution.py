@@ -249,7 +249,7 @@ class RLSystemExecutor:
     
     def test_ppo_agent(self) -> Dict[str, Any]:
         """Test the PPO agent functionality."""
-        self.logger.info("🤖 Testing PPO Agent...")
+        self.logger.info("Testing PPO Agent...")
         
         try:
             # Initialize PPO configuration
@@ -283,22 +283,23 @@ class RLSystemExecutor:
                 config=ppo_config
             )
             
-            self.logger.info(f"✅ PPO Agent initialized:")
+            self.logger.info(f"PPO Agent initialized:")
             self.logger.info(f"   - State dimension: {state_dim}")
             self.logger.info(f"   - Action dimension: {action_dim}")
             self.logger.info(f"   - Network architecture: {ppo_config.hidden_size} hidden units")
             
             # Test agent forward pass
             test_state = self.rl_environment.reset()
-            test_state_tensor = torch.FloatTensor(test_state).unsqueeze(0)
             
             with torch.no_grad():
-                action, log_prob, value = self.rl_agent.get_action(test_state_tensor)
-            
-            self.logger.info(f"✅ Agent forward pass successful:")
+                action, action_info = self.rl_agent.select_action(test_state)
+                log_prob = action_info['log_prob']
+                value = action_info['value']
+
+            self.logger.info(f"Agent forward pass successful:")
             self.logger.info(f"   - Action shape: {action.shape}")
-            self.logger.info(f"   - Log probability: {log_prob.item():.4f}")
-            self.logger.info(f"   - Value: {value.item():.4f}")
+            self.logger.info(f"   - Log probability: {log_prob:.4f}")
+            self.logger.info(f"   - Value: {value:.4f}")
             
             # Test short training episode
             training_rewards = []
@@ -306,14 +307,10 @@ class RLSystemExecutor:
             
             state = self.rl_environment.reset()
             for step in range(training_length):
-                state_tensor = torch.FloatTensor(state).unsqueeze(0)
-                
                 with torch.no_grad():
-                    action, log_prob, value = self.rl_agent.get_action(state_tensor)
-                
-                # Convert action to environment format
-                action_np = action.squeeze().numpy()
-                next_state, reward, done, info = self.rl_environment.step(action_np)
+                    action, action_info = self.rl_agent.select_action(state)
+
+                next_state, reward, done, info = self.rl_environment.step(action)
                 
                 training_rewards.append(reward)
                 state = next_state
@@ -339,18 +336,18 @@ class RLSystemExecutor:
             }
             
             self.results['agent_training'] = agent_results
-            self.logger.info("✅ PPO Agent testing completed successfully")
+            self.logger.info("PPO Agent testing completed successfully")
             
             return agent_results
             
         except Exception as e:
-            self.logger.error(f"❌ Error testing PPO agent: {e}")
+            self.logger.error(f"Error testing PPO agent: {e}")
             self.results['agent_training'] = {'status': 'error', 'error': str(e)}
             raise e
     
     def test_integration_system(self, data: pd.DataFrame) -> Dict[str, Any]:
         """Test the integrated healthcare workload optimizer."""
-        self.logger.info("🔗 Testing Integration System...")
+        self.logger.info("Testing Integration System...")
         
         try:
             # Initialize integration configuration
@@ -375,22 +372,22 @@ class RLSystemExecutor:
                 config=integration_config
             )
             
-            self.logger.info("✅ Healthcare Workload Optimizer initialized")
+            self.logger.info("Healthcare Workload Optimizer initialized")
             
             # Test prediction model integration
             if hasattr(self.optimizer, 'prediction_model') and self.optimizer.prediction_model is not None:
-                self.logger.info("✅ Prediction model loaded successfully")
+                self.logger.info("Prediction model loaded successfully")
                 prediction_status = "loaded"
             else:
-                self.logger.info("⚠️ No prediction model loaded, using baseline")
+                self.logger.info("No prediction model loaded, using baseline")
                 prediction_status = "baseline"
             
             # Test RL model integration
             if hasattr(self.optimizer, 'rl_agent') and self.optimizer.rl_agent is not None:
-                self.logger.info("✅ RL agent loaded successfully")
+                self.logger.info("RL agent loaded successfully")
                 rl_status = "loaded"
             else:
-                self.logger.info("⚠️ No RL agent loaded, will train new one")
+                self.logger.info("No RL agent loaded, will train new one")
                 rl_status = "training_required"
             
             # Test optimization pipeline
@@ -410,7 +407,7 @@ class RLSystemExecutor:
                 }
                 
             except Exception as opt_error:
-                self.logger.warning(f"⚠️ Optimization simulation failed: {opt_error}")
+                self.logger.warning(f"Optimization simulation failed: {opt_error}")
                 integration_results = {
                     'status': 'partial_success',
                     'prediction_model_status': prediction_status,
@@ -420,18 +417,18 @@ class RLSystemExecutor:
                 }
             
             self.results['performance_metrics'] = integration_results
-            self.logger.info("✅ Integration system testing completed")
+            self.logger.info("Integration system testing completed")
             
             return integration_results
             
         except Exception as e:
-            self.logger.error(f"❌ Error testing integration system: {e}")
+            self.logger.error(f"Error testing integration system: {e}")
             self.results['performance_metrics'] = {'status': 'error', 'error': str(e)}
             raise e
     
     def _simulate_optimization(self, data: pd.DataFrame) -> Dict[str, Any]:
         """Simulate the optimization process for testing."""
-        self.logger.info("🎯 Simulating optimization process...")
+        self.logger.info("Simulating optimization process...")
         
         # Simulate optimization metrics
         episodes = 50
@@ -449,7 +446,7 @@ class RLSystemExecutor:
     
     def calculate_compliance_metrics(self) -> Dict[str, Any]:
         """Calculate healthcare compliance metrics."""
-        self.logger.info("🛡️ Calculating compliance metrics...")
+        self.logger.info("Calculating compliance metrics...")
         
         try:
             # Simulate compliance metrics based on environment tests
@@ -487,18 +484,18 @@ class RLSystemExecutor:
                 }
             
             self.results['compliance_metrics'] = compliance_metrics
-            self.logger.info("✅ Compliance metrics calculated successfully")
+            self.logger.info("Compliance metrics calculated successfully")
             
             return compliance_metrics
             
         except Exception as e:
-            self.logger.error(f"❌ Error calculating compliance metrics: {e}")
+            self.logger.error(f"Error calculating compliance metrics: {e}")
             self.results['compliance_metrics'] = {'status': 'error', 'error': str(e)}
             raise e
     
     def generate_execution_summary(self) -> Dict[str, Any]:
         """Generate comprehensive execution summary."""
-        self.logger.info("📋 Generating execution summary...")
+        self.logger.info("Generating execution summary...")
         
         execution_time = time.time() - self.start_time
         
@@ -539,7 +536,7 @@ class RLSystemExecutor:
         }
         
         self.results['execution_summary'] = summary
-        self.logger.info("✅ Execution summary generated successfully")
+        self.logger.info("Execution summary generated successfully")
         
         return summary
     
@@ -579,7 +576,7 @@ class RLSystemExecutor:
     
     def save_results(self):
         """Save all results to JSON file."""
-        self.logger.info("💾 Saving results...")
+        self.logger.info("Saving results...")
         
         try:
             # Save detailed results
@@ -588,7 +585,7 @@ class RLSystemExecutor:
             with open(results_file, 'w') as f:
                 json.dump(self.results, f, indent=2, default=str)
             
-            self.logger.info(f"✅ Results saved to {results_file}")
+            self.logger.info(f"Results saved to {results_file}")
             
             # Save summary to separate file
             summary_file = self.output_dir / "rl_system_summary.json"
@@ -605,75 +602,75 @@ class RLSystemExecutor:
             with open(summary_file, 'w') as f:
                 json.dump(summary_data, f, indent=2, default=str)
             
-            self.logger.info(f"✅ Summary saved to {summary_file}")
+            self.logger.info(f"Summary saved to {summary_file}")
             
         except Exception as e:
-            self.logger.error(f"❌ Error saving results: {e}")
+            self.logger.error(f"Error saving results: {e}")
             raise e
     
     def run_complete_rl_pipeline(self):
         """Run the complete RL system pipeline."""
-        self.logger.info("🚀 Starting Complete RL System Pipeline")
+        self.logger.info("Starting Complete RL System Pipeline")
         self.logger.info("=" * 80)
         
         try:
             # Step 1: Load healthcare data
-            self.logger.info("📊 Step 1: Loading Healthcare Data")
+            self.logger.info("Step 1: Loading Healthcare Data")
             data = self.load_healthcare_data()
-            self.logger.info(f"✅ Loaded {len(data)} records with {len(data.columns)} features")
+            self.logger.info(f"Loaded {len(data)} records with {len(data.columns)} features")
             
             # Step 2: Test RL Environment
-            self.logger.info("🧪 Step 2: Testing RL Environment")
+            self.logger.info("Step 2: Testing RL Environment")
             env_results = self.test_rl_environment(data)
-            self.logger.info(f"✅ Environment test completed: {env_results['status']}")
+            self.logger.info(f"Environment test completed: {env_results['status']}")
             
             # Step 3: Test PPO Agent
-            self.logger.info("🤖 Step 3: Testing PPO Agent")
+            self.logger.info("Step 3: Testing PPO Agent")
             agent_results = self.test_ppo_agent()
-            self.logger.info(f"✅ Agent test completed: {agent_results['status']}")
+            self.logger.info(f"Agent test completed: {agent_results['status']}")
             
             # Step 4: Test Integration System
-            self.logger.info("🔗 Step 4: Testing Integration System")
+            self.logger.info("Step 4: Testing Integration System")
             integration_results = self.test_integration_system(data)
-            self.logger.info(f"✅ Integration test completed: {integration_results['status']}")
+            self.logger.info(f"Integration test completed: {integration_results['status']}")
             
             # Step 5: Calculate Compliance Metrics
-            self.logger.info("🛡️ Step 5: Calculating Compliance Metrics")
+            self.logger.info("Step 5: Calculating Compliance Metrics")
             compliance_results = self.calculate_compliance_metrics()
-            self.logger.info(f"✅ Compliance calculation completed: {compliance_results['status']}")
+            self.logger.info(f"Compliance calculation completed: {compliance_results['status']}")
             
             # Step 6: Generate Summary
-            self.logger.info("📋 Step 6: Generating Execution Summary")
+            self.logger.info("Step 6: Generating Execution Summary")
             summary = self.generate_execution_summary()
-            self.logger.info(f"✅ Summary generated: Overall success = {summary['overall_success']}")
+            self.logger.info(f"Summary generated: Overall success = {summary['overall_success']}")
             
             # Step 7: Save Results
-            self.logger.info("💾 Step 7: Saving Results")
+            self.logger.info("Step 7: Saving Results")
             self.save_results()
             
             # Final summary
             self.logger.info("=" * 80)
-            self.logger.info("🎉 RL System Pipeline Completed Successfully!")
-            self.logger.info(f"⏱️ Total execution time: {summary['total_execution_time_formatted']}")
-            self.logger.info(f"✅ Overall success: {summary['overall_success']}")
-            self.logger.info(f"🛡️ Compliance score: {summary['overall_compliance_score']:.2%}")
+            self.logger.info("RL System Pipeline Completed Successfully!")
+            self.logger.info(f"Total execution time: {summary['total_execution_time_formatted']}")
+            self.logger.info(f"Overall success: {summary['overall_success']}")
+            self.logger.info(f"Compliance score: {summary['overall_compliance_score']:.2%}")
             
             if summary['recommendations']:
-                self.logger.info("📋 Recommendations:")
+                self.logger.info("Recommendations:")
                 for rec in summary['recommendations']:
                     self.logger.info(f"   • {rec}")
             
             return True
             
         except Exception as e:
-            self.logger.error(f"❌ RL System Pipeline failed: {e}")
+            self.logger.error(f"RL System Pipeline failed: {e}")
             self.logger.error("=" * 80)
             return False
 
 
 def main():
     """Main execution function."""
-    logger.info("🚀 Starting RL System Execution")
+    logger.info("Starting RL System Execution")
     logger.info("=" * 80)
     
     try:
@@ -687,17 +684,17 @@ def main():
         
         logger.info("=" * 80)
         if success:
-            logger.info("✅ RL System execution completed successfully!")
-            logger.info("📊 Check reports/rl_system_execution_report.json for detailed results")
-            logger.info("📋 Check reports/rl_system_summary.json for key metrics")
+            logger.info("RL System execution completed successfully!")
+            logger.info("Check reports/rl_system_execution_report.json for detailed results")
+            logger.info("Check reports/rl_system_summary.json for key metrics")
         else:
-            logger.error("❌ RL System execution failed!")
-            logger.error("📊 Check logs/rl_system_execution.log for error details")
+            logger.error("RL System execution failed!")
+            logger.error("Check logs/rl_system_execution.log for error details")
         
         return success
         
     except Exception as e:
-        logger.error(f"❌ Fatal error in RL system execution: {e}")
+        logger.error(f"Fatal error in RL system execution: {e}")
         return False
 
 
