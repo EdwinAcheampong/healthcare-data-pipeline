@@ -15,10 +15,10 @@ Before you begin, ensure you have the following installed on your system:
 Open your terminal, navigate to the directory where you want to store the project, and clone the repository:
 
 ```bash
-git clone https://github.com/your-username/healthcare-data-pipeline.git
+git clone https://github.com/EdwinAcheampong/healthcare-data-pipeline.git
 cd healthcare-data-pipeline
 ```
-*(Replace `your-username` with your actual GitHub username or the correct repository URL.)*
+*(This is the correct URL for your project.)*
 
 ---
 

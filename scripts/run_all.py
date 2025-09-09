@@ -56,25 +56,41 @@ logging.basicConfig(
 )
 
 def run_command(command: list[str]):
-    """Runs a command and logs the output."""
+    """
+    Runs a command, streams its output in real-time, and waits for it to complete.
+    """
     logging.info(f"Running command: {' '.join(command)}")
-    process = subprocess.run(
+    
+    # Use Popen to start the process and capture its output streams
+    process = subprocess.Popen(
         command,
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         text=True,
         encoding='utf-8',
-        errors='replace'
+        errors='replace',
+        bufsize=1  # Line-buffered
     )
+
+    # Real-time logging of stdout
     if process.stdout:
-        logging.info(process.stdout)
+        for line in iter(process.stdout.readline, ''):
+            logging.info(f"[stdout] {line.strip()}")
+    
+    # Real-time logging of stderr
     if process.stderr:
-        logging.error(process.stderr)
+        for line in iter(process.stderr.readline, ''):
+            logging.error(f"[stderr] {line.strip()}")
+
+    # Wait for the process to complete and get the exit code
+    process.wait()
     
     if process.returncode != 0:
         logging.error(f"Command failed with exit code {process.returncode}")
         raise subprocess.CalledProcessError(process.returncode, command)
     
     logging.info("Command completed successfully.")
+
 
 def main():
     """Runs the entire pipeline and pushes metrics."""
