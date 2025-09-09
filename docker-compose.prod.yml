@@ -7,6 +7,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: healthcare_api_prod
+    mem_limit: 2g
     ports:
       - "8000:8000"
     environment:
@@ -37,7 +38,7 @@ services:
       POSTGRES_USER: healthcare_user
       POSTGRES_PASSWORD: healthcare_pass
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init-scripts:/docker-entrypoint-initdb.d
@@ -106,7 +107,7 @@ services:
     ports:
       - "9090:9090"
     volumes:
-      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
       - prometheus_data:/prometheus
     command:
       - "--config.file=/etc/prometheus/prometheus.yml"
@@ -115,6 +116,16 @@ services:
       - "--web.console.templates=/etc/prometheus/consoles"
       - "--storage.tsdb.retention.time=200h"
       - "--web.enable-lifecycle"
+    networks:
+      - healthcare_network
+    restart: unless-stopped
+
+  # Prometheus Pushgateway for batch jobs
+  pushgateway:
+    image: prom/pushgateway:latest
+    container_name: healthcare_pushgateway_prod
+    ports:
+      - "9091:9091"
     networks:
       - healthcare_network
     restart: unless-stopped
