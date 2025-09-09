@@ -223,12 +223,17 @@ pytest --cov=src tests/
 ## 🐳 **Docker Support**
 
 ```bash
-# Development environment
+# Fast development environment (recommended)
+docker-compose -f docker-compose.dev.yml up
+
+# Full development environment
 docker-compose up
 
 # Production environment
 docker-compose -f docker-compose.prod.yml up
 ```
+
+See [Docker Optimization Guide](docs/DOCKER_OPTIMIZATION.md) for detailed information on how to optimize Docker performance for different use cases.
 
 ## 🤝 **Contributing**
 

@@ -15,11 +15,12 @@ import logging
 import sys
 import time
 import socket
+import os
 from pathlib import Path
 from prometheus_client import CollectorRegistry, Gauge, push_to_gateway
 
 # --- Prometheus Metrics Setup ---
-PUSHGATEWAY_ADDRESS = "pushgateway:9091"
+PUSHGATEWAY_ADDRESS = os.getenv("PUSHGATEWAY_ADDRESS", "pushgateway:9091")
 JOB_NAME = "healthcare_pipeline_batch"
 
 # It's good practice to use a registry specific to this job
@@ -58,38 +59,38 @@ logging.basicConfig(
 def run_command(command: list[str]):
     """
     Runs a command, streams its output in real-time, and waits for it to complete.
+    
+    Args:
+        command: The command to run as a list of strings.
+        
+    Raises:
+        subprocess.CalledProcessError: If the command returns a non-zero exit code.
     """
     logging.info(f"Running command: {' '.join(command)}")
     
-    # Use Popen to start the process and capture its output streams
-    process = subprocess.Popen(
-        command,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        text=True,
-        encoding='utf-8',
-        errors='replace',
-        bufsize=1  # Line-buffered
-    )
+    try:
+        # Using subprocess.run with capture_output=False to stream output directly
+        # to the parent's stdout/stderr, which are captured by our logger.
+        # This is simpler and less prone to deadlocks than PIPE.
+        result = subprocess.run(
+            command,
+            check=True,       # Raise CalledProcessError on non-zero exit codes
+            text=True,        # Decode stdout/stderr as text
+            encoding='utf-8',
+            errors='replace'
+        )
+        logging.info(f"Command completed successfully with exit code {result.returncode}")
 
-    # Real-time logging of stdout
-    if process.stdout:
-        for line in iter(process.stdout.readline, ''):
-            logging.info(f"[stdout] {line.strip()}")
-    
-    # Real-time logging of stderr
-    if process.stderr:
-        for line in iter(process.stderr.readline, ''):
-            logging.error(f"[stderr] {line.strip()}")
-
-    # Wait for the process to complete and get the exit code
-    process.wait()
-    
-    if process.returncode != 0:
-        logging.error(f"Command failed with exit code {process.returncode}")
-        raise subprocess.CalledProcessError(process.returncode, command)
-    
-    logging.info("Command completed successfully.")
+    except FileNotFoundError:
+        logging.error(f"Command not found: {command[0]}. Please ensure it is in your PATH.")
+        raise
+    except subprocess.CalledProcessError as e:
+        logging.error(f"Command failed with exit code {e.returncode}")
+        # No need to log stdout/stderr here as it's already streamed
+        raise
+    except Exception as e:
+        logging.error(f"An unexpected error occurred while running command: {e}")
+        raise
 
 
 def main():
@@ -101,19 +102,19 @@ def main():
 
         # 1. Run ETL pipeline
         logging.info("----- Step 1: Running ETL pipeline -----")
-        run_command(["python", "src/data_pipeline/etl.py"])
+        run_command([sys.executable, "src/data_pipeline/etl.py"])
 
         # 2. Run ML model execution
         logging.info("----- Step 2: Running ML model execution -----")
-        run_command(["python", "scripts/ml_model_execution.py"])
+        run_command([sys.executable, "scripts/ml_model_execution.py"])
 
         # 3. Run RL system execution
         logging.info("----- Step 3: Running RL system execution -----")
-        run_command(["python", "scripts/rl_system_execution.py"])
+        run_command([sys.executable, "scripts/rl_system_execution.py"])
 
         # 4. Run tests
         logging.info("----- Step 4: Running tests -----")
-        run_command(["pytest", "tests/"])
+        run_command([sys.executable, "-m", "pytest", "tests/"])
 
         logging.info("All steps completed successfully!")
         g_last_success.set_to_current_time()

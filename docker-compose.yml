@@ -44,26 +44,26 @@ services:
       - msc_network
 
   # Jupyter Lab for data analysis
-  jupyter:
-    build:
-      context: .
-      dockerfile: Dockerfile.jupyter
-    container_name: msc_jupyter
-    ports:
-      - "8888:8888"
-    volumes:
-      - ./notebooks:/home/jovyan/work/notebooks
-      - ./data:/home/jovyan/work/data
-      - ./src:/home/jovyan/work/src
-    environment:
-      - JUPYTER_ENABLE_LAB=yes
-      - JUPYTER_TOKEN=msc-project-token
-    depends_on:
-      - postgres
-      - mongodb
-      - redis
-    networks:
-      - msc_network
+  # jupyter:
+  #   build:
+  #     context: .
+  #     dockerfile: Dockerfile.jupyter
+  #   container_name: msc_jupyter
+  #   ports:
+  #     - "8888:8888"
+  #   volumes:
+  #     - ./notebooks:/home/jovyan/work/notebooks
+  #     - ./data:/home/jovyan/work/data
+  #     - ./src:/home/jovyan/work/src
+  #   environment:
+  #     - JUPYTER_ENABLE_LAB=yes
+  #     - JUPYTER_TOKEN=msc-project-token
+  #   depends_on:
+  #     - postgres
+  #     - mongodb
+  #     - redis
+  #   networks:
+  #     - msc_network
 
   # MLflow for experiment tracking
   mlflow:
@@ -109,12 +109,94 @@ services:
     networks:
       - msc_network
 
+  # FastAPI application
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: msc_api
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./src:/app/src
+    environment:
+      - DATABASE_URL=postgresql://postgres:postgres@postgres:5432/msc_project
+      - MONGO_URI=mongodb://admin:admin@mongodb:27017/healthcare_data
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+    networks:
+      - msc_network
+
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    container_name: msc_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+    depends_on:
+      - api
+      - pushgateway
+    networks:
+      - msc_network
+
+  # Prometheus Pushgateway for short-lived jobs
+  pushgateway:
+    image: prom/pushgateway:v1.4.2
+    container_name: msc_pushgateway
+    ports:
+      - "9091:9091"
+    networks:
+      - msc_network
+
+  # Grafana for metrics visualization
+  grafana:
+    image: grafana/grafana:8.4.3
+    container_name: msc_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - grafana_data:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    depends_on:
+      - prometheus
+    networks:
+      - msc_network
+
+  # Pipeline runner for executing the data pipelines
+  pipeline-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: msc_pipeline_runner
+    command: python scripts/run_all.py
+    depends_on:
+      - postgres
+      - mongodb
+      - redis
+      - api
+    networks:
+      - msc_network
+
 volumes:
   postgres_data:
   mongodb_data:
   redis_data:
+  prometheus_data:
+  grafana_data:
 
 networks:
   msc_network:
     driver: bridge
-

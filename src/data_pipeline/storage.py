@@ -52,7 +52,7 @@ class ParquetStorage(StorageInterface):
 
     def __init__(self, base_path: Optional[Path] = None):
         self.logger = logging.getLogger(__name__)
-        self.base_path = base_path or settings.data.processed_data_path / "parquet"
+        self.base_path = base_path or settings.processed_data_path / "parquet"
         self.base_path.mkdir(parents=True, exist_ok=True)
 
         # Metadata storage

@@ -13,6 +13,7 @@ from fastapi.exceptions import RequestValidationError
 import time
 import logging
 from contextlib import asynccontextmanager
+from starlette_prometheus import PrometheusMiddleware, metrics
 
 from src.config.settings import get_settings
 from src.utils.logging import setup_logging
@@ -64,6 +65,10 @@ def create_app() -> FastAPI:
             TrustedHostMiddleware,
             allowed_hosts=settings.allowed_hosts
         )
+    
+    # Add Prometheus middleware
+    app.add_middleware(PrometheusMiddleware)
+    app.add_route("/metrics", metrics)
     
     # Add request logging middleware
     @app.middleware("http")

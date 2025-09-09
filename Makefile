@@ -50,10 +50,31 @@ docker-up:
 	@echo "Starting Docker services..."
 	@docker-compose up -d
 
+# Start only essential Docker services for faster development
+docker-up-fast:
+	@echo "Starting essential Docker services only..."
+	@docker-compose -f docker-compose.dev.yml up -d
+
+# Start all services with profiles
+docker-up-full:
+	@echo "Starting all Docker services..."
+	@docker-compose --profile full up -d
+
 # Stop Docker services
 docker-down:
 	@echo "Stopping Docker services..."
 	@docker-compose down
+
+# Stop fast development services
+docker-down-fast:
+	@echo "Stopping fast Docker services..."
+	@docker-compose -f docker-compose.dev.yml down
+
+# Stop all services
+docker-down-all:
+	@echo "Stopping all Docker services..."
+	@docker-compose down
+	@docker-compose -f docker-compose.dev.yml down
 
 # Start Jupyter Lab
 jupyter:

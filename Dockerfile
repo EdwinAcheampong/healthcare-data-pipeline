@@ -8,14 +8,15 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy and install Python dependencies
 # Copy requirements first to leverage Docker layer caching
 COPY requirements.txt .
 COPY requirements-dev.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-RUN pip install --no-cache-dir -r requirements-dev.txt
+RUN pip install --no-cache-dir --timeout=600 -r requirements.txt
+RUN pip install --no-cache-dir --timeout=600 -r requirements-dev.txt
 
 # Copy only the source code to minimize rebuilds
 COPY src/ ./src/

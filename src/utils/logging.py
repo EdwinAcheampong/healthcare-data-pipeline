@@ -30,9 +30,9 @@ def setup_logging(
         Configured logger instance
     """
     # Use settings defaults if not provided
-    level = level or settings.logging.level
-    log_file = log_file or settings.logging.file_path
-    format_string = format_string or settings.logging.format
+    level = level or settings.log_level
+    log_file = log_file or settings.log_file_path
+    format_string = format_string or settings.log_format
     
     # Create logger
     logger = logging.getLogger("msc_healthcare")

@@ -23,7 +23,11 @@ from src.api.models.responses import (
     ErrorResponse
 )
 from src.api.models.schemas import OptimizationResult, WorkloadMetrics
+import logging
 from src.utils.logging import setup_logging
+
+# Setup logger
+logger = setup_logging()
 
 # Import RL models from Phase 2B
 try:
@@ -35,7 +39,6 @@ except ImportError:
     RL_AVAILABLE = False
     logger.warning("RL models not available - optimization endpoints will be limited")
 
-logger = setup_logging()
 router = APIRouter()
 
 # In-memory storage for optimization jobs (in production, use Redis/Database)

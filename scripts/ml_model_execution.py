@@ -294,7 +294,18 @@ class MLModelExecutor:
             self.logger.info(f"  - Training samples: {feature_stats['training_samples']:,}")
             self.logger.info(f"  - Feature dimensions: {feature_stats['feature_dimensions']}")
             self.logger.info(f"  - Data source: {feature_stats['data_source']}")
+
+            # Save the training data for the RL script
+            X_df = pd.DataFrame(X, columns=feature_names)
+            y_df = pd.DataFrame(y, columns=['predicted_patient_volume'])
             
+            processed_data_path = Path("data/processed")
+            processed_data_path.mkdir(exist_ok=True)
+            
+            X_df.to_parquet(processed_data_path / "X_train.parquet")
+            y_df.to_parquet(processed_data_path / "y_train.parquet")
+            self.logger.info(f"Saved training data for RL script to {processed_data_path}")
+
             return {
                 'status': 'SUCCESS',
                 'feature_stats': feature_stats,

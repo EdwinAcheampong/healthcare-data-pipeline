@@ -9,98 +9,71 @@ from typing import Any, Dict, Optional
 from pydantic_settings import BaseSettings
 from pydantic import Field
 
-
-class DatabaseSettings(BaseSettings):
-    """Database configuration settings."""
-    
-    url: str = Field(default="postgresql://postgres:postgres@localhost:5432/msc_project")
-    database_url: str = Field(default="postgresql://postgres:postgres@localhost:5432/msc_project")
-    mongo_uri: str = Field(default="mongodb://localhost:27017/healthcare_data")
-    redis_url: str = Field(default="redis://localhost:6379/0")
-    
-    class Config:
-        env_prefix = "DATABASE_"
-
-
-class APISettings(BaseSettings):
-    """API configuration settings."""
-    
-    host: str = Field(default="localhost")
-    port: int = Field(default=8000)
-    secret_key: str = Field(default="development-secret-key")
-    jwt_secret_key: str = Field(default="jwt-development-secret")
-    cors_origins: list = Field(default=["http://localhost:3000", "http://localhost:8080"])
-    allowed_hosts: list = Field(default=["localhost", "127.0.0.1"])
-    log_level: str = Field(default="INFO")
-    
-    class Config:
-        env_prefix = "API_"
-
-
-class DataSettings(BaseSettings):
-    """Data processing configuration settings."""
-    
-    synthea_data_path: Path = Field(default=Path("./data/synthea/"))
-    processed_data_path: Path = Field(default=Path("./data/processed/"))
-    raw_data_path: Path = Field(default=Path("./data/raw/"))
-    
-    class Config:
-        env_prefix = "DATA_"
-
-
-class MLSettings(BaseSettings):
-    """Machine learning configuration settings."""
-    
-    model_registry_path: Path = Field(default=Path("./models/"))
-    experiment_tracking_uri: str = Field(default="./mlruns/")
-    model_serving_port: int = Field(default=8001)
-    
-    class Config:
-        env_prefix = "ML_"
-
-
-class FHIRSettings(BaseSettings):
-    """FHIR server configuration settings."""
-    
-    server_url: str = Field(default="http://localhost:8082/fhir")
-    validation_enabled: bool = Field(default=True)
-    phi_anonymization: bool = Field(default=True)
-    
-    class Config:
-        env_prefix = "FHIR_"
-
-
-class LoggingSettings(BaseSettings):
-    """Logging configuration settings."""
-    
-    level: str = Field(default="INFO")
-    format: str = Field(default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-    file_path: Optional[Path] = Field(default=Path("./logs/app.log"))
-    
-    class Config:
-        env_prefix = "LOG_"
-
-
 class Settings(BaseSettings):
     """Main application settings."""
-    
+
     # Environment
     debug: bool = Field(default=True)
     testing: bool = Field(default=False)
     environment: str = Field(default="development")
-    
-    # Component settings
-    database: DatabaseSettings = DatabaseSettings()
-    api: APISettings = APISettings()
-    data: DataSettings = DataSettings()
-    ml: MLSettings = MLSettings()
-    fhir: FHIRSettings = FHIRSettings()
-    logging: LoggingSettings = LoggingSettings()
-    
+
+    # Database configuration settings
+    database_url: str = Field(default="postgresql://postgres:postgres@localhost:5432/msc_project")
+    mongo_uri: str = Field(default="mongodb://localhost:27017/healthcare_data")
+    redis_url: str = Field(default="redis://localhost:6379/0")
+
+    # API configuration settings
+    api_host: str = Field(default="localhost")
+    api_port: int = Field(default=8000)
+    api_secret_key: str = Field(default="development-secret-key")
+    jwt_secret_key: str = Field(default="jwt-development-secret")
+    cors_origins: list = Field(default=["http://localhost:3000", "http://localhost:8080"])
+    allowed_hosts: list = Field(default=["localhost", "127.0.0.1"])
+
+    # Data processing configuration settings
+    synthea_data_path: Path = Field(default=Path("/app/data/synthea/"))
+    processed_data_path: Path = Field(default=Path("/app/data/processed/"))
+    raw_data_path: Path = Field(default=Path("/app/data/raw/"))
+
+    # Machine learning configuration settings
+    model_registry_path: Path = Field(default=Path("./models/"))
+    experiment_tracking_uri: str = Field(default="./mlruns/")
+    model_serving_port: int = Field(default=8001)
+
+    # FHIR server configuration settings
+    fhir_server_url: str = Field(default="http://localhost:8082/fhir")
+    hl7_validation_enabled: bool = Field(default=True)
+    phi_anonymization: bool = Field(default=True)
+
+    # Logging configuration settings
+    log_level: str = Field(default="INFO")
+    log_format: str = Field(default="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+    log_file_path: Optional[Path] = Field(default=Path("./logs/app.log"))
+
+    # Cloud Storage (Optional)
+    aws_access_key_id: Optional[str] = None
+    aws_secret_access_key: Optional[str] = None
+    aws_region: Optional[str] = None
+    aws_s3_bucket: Optional[str] = None
+    azure_storage_connection_string: Optional[str] = None
+    azure_container_name: Optional[str] = None
+
+    # Monitoring & Logging
+    sentry_dsn: Optional[str] = None
+    prometheus_port: int = 9090
+
+    # Airflow Configuration (if using)
+    airflow_home: Optional[str] = None
+    airflow_webserver_port: int = 8080
+    airflow_scheduler_heartbeat_sec: int = 5
+
+    # Jupyter Configuration
+    jupyter_port: int = 8888
+    jupyter_token: Optional[str] = None
+
     class Config:
         env_file = ".env"
         case_sensitive = False
-
 
 def get_settings() -> Settings:
     """Get application settings."""

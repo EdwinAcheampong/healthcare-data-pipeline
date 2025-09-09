@@ -43,8 +43,8 @@ class ETLPipeline:
 
     def __init__(self):
         self.logger = logging.getLogger(__name__)
-        self.synthea_path = settings.data.synthea_data_path
-        self.processed_path = settings.data.processed_data_path
+        self.synthea_path = settings.synthea_data_path
+        self.processed_path = settings.processed_data_path
 
         # Ensure output directories exist
         self.processed_path.mkdir(parents=True, exist_ok=True)

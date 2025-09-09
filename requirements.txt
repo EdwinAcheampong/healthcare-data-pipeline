@@ -27,14 +27,19 @@ fastapi>=0.103.0
 uvicorn>=0.23.0
 # Data Validation & Quality
 pydantic>=2.3.0
+pydantic-settings
 # Configuration & Environment
 python-dotenv>=1.0.0
 click>=8.1.0
 # Cloud & Deployment
 # Monitoring & Logging
+prometheus-client>=0.17.0
+starlette-prometheus>=0.9.0
+psutil>=5.9.0
 # Security & Authentication
 # Time Series Analysis
 statsmodels>=0.14.0
 # Performance & Optimization
 joblib>=1.3.0
 # Additional Pipeline Dependencies
+prophet 
