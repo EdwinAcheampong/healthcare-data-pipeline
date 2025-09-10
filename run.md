@@ -1,6 +1,10 @@
 # End-to-End Solution Guide
 
-This document provides a complete, step-by-step guide to set up, run, and monitor the entire Healthcare Data Pipeline solution using the production Docker environment.
+This document provides a complete, step-by-step guide to set up, run, and monitor the entire Healthcare Data Pipeline solution.
+
+## Production Environment (Docker)
+
+This is the recommended way to run the entire application stack.
 
 ### Prerequisites
 
@@ -18,7 +22,6 @@ Open your terminal, navigate to the directory where you want to store the projec
 git clone https://github.com/EdwinAcheampong/healthcare-data-pipeline.git
 cd healthcare-data-pipeline
 ```
-*(This is the correct URL for your project.)*
 
 ---
 
@@ -30,7 +33,7 @@ The application uses environment variables for configuration. A template is prov
     ```bash
     cp env.example .env
     ```
-2.  **Review the `.env` file:** Open the newly created `.env` file in a text editor. The default values are suitable for the Docker environment, but you can customize them if needed (e.g., changing the Grafana password).
+2.  **Review the `.env` file:** Open the newly created `.env` file in a text editor. The default values are suitable for the Docker environment.
 
 ---
 
@@ -47,60 +50,81 @@ The ETL pipeline is configured to look for raw Synthea data.
 
 ### Step 4: Build and Run the Entire Stack
 
-This single command will build the Docker images (if they don't exist) and start all services (API, database, Prometheus, Grafana, etc.) in the background.
+This single command will build the Docker images and start all services in the background.
 
 ```bash
 docker-compose -f docker-compose.prod.yml up --build -d
 ```
-- `--build`: Forces a rebuild of the images to ensure all recent changes are included.
-- `-d`: Runs the containers in detached mode (in the background).
-
-To check the status of your running containers, you can use `docker-compose -f docker-compose.prod.yml ps`.
 
 ---
 
 ### Step 5: Execute the Data & ML Pipelines
 
-With the services running, you now need to execute the main processing script *inside* the `api` container. This script will run the ETL, train the ML models, execute the RL system, and run the project's tests.
+Execute the main processing script *inside* the `api` container.
 
 ```bash
 docker-compose -f docker-compose.prod.yml exec api python scripts/run_all.py
 ```
-You will see detailed logs in your terminal as the script progresses through each step. This process may take several minutes to complete.
 
 ---
 
 ### Step 6: Access the Grafana Dashboard
-
-Once the pipeline execution is complete, the system is fully operational and monitoring data is being collected.
 
 1.  **Open your web browser** and navigate to:
     [**http://localhost:3001**](http://localhost:3001)
 
 2.  **Log in:**
     -   **Username:** `admin`
-    -   **Password:** `admin` (or whatever you set in your `.env` file)
-
-3.  **View the Dashboard:** Navigate to the "Dashboards" section. The pre-configured "Healthcare API Monitoring" dashboard will be available to view live metrics from the API and the results of the pipeline execution batch job.
+    -   **Password:** `admin`
 
 ---
 
-### Step 7: Access the Streamlit Dashboard
-
-1.  **Open your web browser** and navigate to:
-    [**http://localhost:8501**](http://localhost:8501)
-
-2.  **Run the dashboard:**
-    ```bash
-    streamlit run src/api/dashboard.py
-    ```
-
----
-
-### Stopping the Application
-
-To stop all running services, run the following command:
+### Step 7: Stopping the Application
 
 ```bash
 docker-compose -f docker-compose.prod.yml down
 ```
+
+---
+
+## Local Development (Hybrid Mode)
+
+This mode is ideal for API and model development. It runs the monitoring services (Prometheus, Grafana) in Docker, while the FastAPI application runs locally on your machine.
+
+### Step 1: Start Monitoring Services
+
+Run the following command to start the Grafana and Prometheus containers:
+
+```bash
+docker-compose -f docker-compose.monitoring.yml up -d
+```
+
+### Step 2: Install Dependencies and Run API
+
+In a separate terminal, run the following commands to install the Python dependencies and start the local API server:
+
+```bash
+# Create and activate a virtual environment (recommended)
+python -m venv .venv
+source .venv/bin/activate  # On Windows, use `.venv\Scripts\activate`
+
+# Install dependencies
+pip install -r requirements.txt
+
+# Run the API
+uvicorn src.api.main:app --reload
+```
+
+### Step 3: Access Services
+
+- **Grafana Dashboard:** [http://localhost:3000](http://localhost:3000)
+- **Prometheus:** [http://localhost:9090](http://localhost:9090)
+- **API Docs:** [http://localhost:8000/docs](http://localhost:8000/docs)
+
+### Step 4: Stopping the Hybrid Stack
+
+1.  **Stop the API:** Press `Ctrl+C` in the terminal where the API is running.
+2.  **Stop the monitoring services:**
+    ```bash
+    docker-compose -f docker-compose.monitoring.yml down
+    ```
