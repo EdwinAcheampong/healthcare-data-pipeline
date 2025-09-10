@@ -23,17 +23,18 @@ from datetime import datetime
 from pathlib import Path
 from typing import Dict, Any
 import json
+import pickle # Import pickle for model serialization
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
 # Add src to path
-sys.path.append(str(Path(__file__).parent.parent / "src"))
+sys.path.append(str(Path(__file__).parent.parent))
 
 # Import our modules with correct class names
-from models.feature_engineering import FeatureEngineer
-from models.baseline_models import HealthcareBaselineModels, BaselinePredictor
-from models.advanced_models import AdvancedHealthcareModels, AdvancedPredictor
-from models.model_evaluation import HealthcareModelEvaluator
+from src.models.feature_engineering import FeatureEngineer
+from src.models.baseline_models import HealthcareBaselineModels, BaselinePredictor
+from src.models.advanced_models import AdvancedHealthcareModels, AdvancedPredictor
+from src.models.model_evaluation import HealthcareModelEvaluator
 
 # Setup logging
 logging.basicConfig(
@@ -345,6 +346,15 @@ class MLModelExecutor:
             baseline_predictor = BaselinePredictor()
             baseline_predictor.fit(X_train_scaled, y_train)
             
+            # Save baseline model and scaler
+            models_path = Path("models")
+            models_path.mkdir(exist_ok=True)
+            with open(models_path / "baseline_predictor.pkl", "wb") as f:
+                pickle.dump(baseline_predictor, f)
+            with open(models_path / "baseline_scaler.pkl", "wb") as f:
+                pickle.dump(scaler, f)
+            self.logger.info(f"Saved baseline predictor and scaler to {models_path}")
+
             # Make predictions
             predictions = baseline_predictor.predict(X_test_scaled)
             
@@ -411,6 +421,15 @@ class MLModelExecutor:
             advanced_predictor = AdvancedPredictor()
             advanced_predictor.fit(X_train_scaled, y_train)
             
+            # Save advanced model and scaler
+            models_path = Path("models")
+            models_path.mkdir(exist_ok=True)
+            with open(models_path / "advanced_predictor.pkl", "wb") as f:
+                pickle.dump(advanced_predictor, f)
+            with open(models_path / "advanced_scaler.pkl", "wb") as f:
+                pickle.dump(scaler, f)
+            self.logger.info(f"Saved advanced predictor and scaler to {models_path}")
+
             # Make predictions
             predictions = advanced_predictor.predict(X_test_scaled)
             

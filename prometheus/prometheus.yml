@@ -1,11 +1,12 @@
 global:
-  scrape_interval: 15s
+  scrape_interval: 5s
 
 scrape_configs:
-  - job_name: 'api'
+  - job_name: "api"
+    metrics_path: /api/v1/monitoring/metrics
     static_configs:
-      - targets: ['api:8000']
-  - job_name: 'pushgateway'
+      - targets: ["host.docker.internal:8000"]
+  - job_name: "pushgateway"
     honor_labels: true
     static_configs:
-      - targets: ['pushgateway:9091']
+      - targets: ["pushgateway:9091"]

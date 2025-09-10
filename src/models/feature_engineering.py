@@ -122,8 +122,8 @@ class FeatureEngineer:
                 encounters_df['START'].dt.hour
             ]).size().reset_index(name='encounter_count')
             
-            hourly_data['date'] = hourly_data['START']
-            hourly_data['hour'] = hourly_data['START']
+            hourly_data['date'] = hourly_data['level_0']
+            hourly_data['hour'] = hourly_data['level_1']
             
             for _, row in hourly_data.iterrows():
                 # Create features for this hour

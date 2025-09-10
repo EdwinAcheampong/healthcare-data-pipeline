@@ -14,6 +14,7 @@ import time
 import logging
 from contextlib import asynccontextmanager
 from starlette_prometheus import PrometheusMiddleware, metrics
+from prometheus_client import Histogram
 
 from src.config.settings import get_settings
 from src.utils.logging import setup_logging
@@ -24,18 +25,21 @@ from src.api.routers import health_router, optimization_router, predictions_rout
 # Setup logging
 logger = setup_logging()
 
+# Prometheus latency metric
+REQUEST_LATENCY = Histogram('starlette_requests_latency_seconds', 'Request latency', ['method', 'path'])
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager."""
     # Startup
-    logger.info("🚀 Starting Healthcare Data Pipeline API...")
+    logger.info("Starting Healthcare Data Pipeline API...")
     settings = get_settings()
     logger.info(f"Environment: {settings.environment}")
     
     yield
     
     # Shutdown
-    logger.info("🛑 Shutting down Healthcare Data Pipeline API...")
+    logger.info("Shutting down Healthcare Data Pipeline API...")
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
@@ -70,19 +74,20 @@ def create_app() -> FastAPI:
     app.add_middleware(PrometheusMiddleware)
     app.add_route("/metrics", metrics)
     
-    # Add request logging middleware
+    # Add request logging and latency middleware
     @app.middleware("http")
     async def log_requests(request: Request, call_next):
         start_time = time.time()
         
         # Log request
-        logger.info(f"📥 {request.method} {request.url.path}")
+        logger.info(f"Request: {request.method} {request.url.path}")
         
         response = await call_next(request)
         
-        # Log response
+        # Log response and record latency
         process_time = time.time() - start_time
-        logger.info(f"📤 {request.method} {request.url.path} - {response.status_code} - {process_time:.3f}s")
+        REQUEST_LATENCY.labels(method=request.method, path=request.url.path).observe(process_time)
+        logger.info(f"Response: {request.method} {request.url.path} - {response.status_code} - {process_time:.3f}s")
         
         # Add timing header
         response.headers["X-Process-Time"] = str(process_time)

@@ -85,6 +85,18 @@ Once the pipeline execution is complete, the system is fully operational and mon
 
 ---
 
+### Step 7: Access the Streamlit Dashboard
+
+1.  **Open your web browser** and navigate to:
+    [**http://localhost:8501**](http://localhost:8501)
+
+2.  **Run the dashboard:**
+    ```bash
+    streamlit run src/api/dashboard.py
+    ```
+
+---
+
 ### Stopping the Application
 
 To stop all running services, run the following command:

@@ -71,6 +71,9 @@ class Settings(BaseSettings):
     jupyter_port: int = 8888
     jupyter_token: Optional[str] = None
 
+    # Gemini API Key
+    gemini_api_key: Optional[str] = None
+
     class Config:
         env_file = ".env"
         case_sensitive = False

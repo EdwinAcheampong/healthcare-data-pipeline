@@ -143,10 +143,10 @@ def get_api_metrics() -> Dict[str, Any]:
         feature_engineer = FeatureEngineer()
         X_data, y_data = feature_engineer.prepare_training_data()
         
-        total_encounters = len(y_data) if y_data is not None and not y_data.empty else 1000
+        total_encounters = len(y_data) if y_data is not None and y_data.size > 0 else 1000
         requests_per_minute = total_encounters / 100
         
-        data_quality = min(1.0, len(X_data) / 5000) if X_data is not None and not X_data.empty else 0.8
+        data_quality = min(1.0, len(X_data) / 5000) if X_data is not None and X_data.size > 0 else 0.8
         success_rate = 0.85 + (data_quality * 0.1)
         avg_response_time = 0.1 + (len(X_data) / 10000) * 0.1
         
@@ -165,15 +165,15 @@ def get_model_metrics() -> Dict[str, Any]:
         feature_engineer = FeatureEngineer()
         X_data, y_data = feature_engineer.prepare_training_data()
         
-        total_predictions = len(y_data) if y_data is not None and not y_data.empty else 0
-        data_quality = min(1.0, len(X_data) / 5000) if X_data is not None and not X_data.empty else 0.8
-        feature_complexity = min(1.0, len(X_data.columns) / 10) if X_data is not None and not X_data.empty else 0.5
+        total_predictions = len(y_data) if y_data is not None and y_data.size > 0 else 0
+        data_quality = min(1.0, len(X_data) / 5000) if X_data is not None and X_data.size > 0 else 0.8
+        feature_complexity = min(1.0, X_data.shape[1] / 10) if X_data is not None and X_data.size > 0 else 0.5
         
         base_accuracy = 0.75
         accuracy_boost = (data_quality * 0.15) + (feature_complexity * 0.1)
         model_accuracy = min(0.98, base_accuracy + accuracy_boost)
         
-        avg_prediction_time = 0.05 + (len(X_data.columns) / 100) if X_data is not None and not X_data.empty else 0.1
+        avg_prediction_time = 0.05 + (X_data.shape[1] / 100) if X_data is not None and X_data.size > 0 else 0.1
         
         return {
             "total_predictions": total_predictions,

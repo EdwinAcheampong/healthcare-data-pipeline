@@ -13,7 +13,7 @@
     {
       "datasource": "Prometheus",
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 12,
         "x": 0,
         "y": 0
@@ -32,20 +32,19 @@
       "targets": [
         {
           "exemplar": true,
-
-          "expr": "rate(api_requests_total[5m])",
+          "expr": "rate(starlette_requests_total[5m])",
           "interval": "",
-          "legendFormat": "{{endpoint}}",
+          "legendFormat": "{{method}} {{path}} {{status_code}}",
           "refId": "A"
         }
       ],
       "title": "API Requests Per Second",
-      "type": "graph"
+      "type": "timeseries"
     },
     {
       "datasource": "Prometheus",
       "gridPos": {
-        "h": 9,
+        "h": 8,
         "w": 12,
         "x": 12,
         "y": 0
@@ -53,9 +52,7 @@
       "id": 4,
       "options": {
         "reduceOptions": {
-          "calcs": [
-            "lastNotNull"
-          ],
+          "calcs": ["lastNotNull"],
           "fields": "",
           "values": false
         },
@@ -84,6 +81,154 @@
       ],
       "title": "System Usage",
       "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 24,
+        "x": 0,
+        "y": 8
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "displayMode": "table",
+          "placement": "right"
+        },
+        "tooltip": {
+          "mode": "multi"
+        }
+      },
+      "pluginVersion": "8.4.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "histogram_quantile(0.95, sum(rate(starlette_requests_latency_seconds_bucket[5m])) by (le, path))",
+          "interval": "",
+          "legendFormat": "p95 latency - {{path}}",
+          "refId": "A"
+        },
+        {
+          "exemplar": true,
+          "expr": "histogram_quantile(0.50, sum(rate(starlette_requests_latency_seconds_bucket[5m])) by (le, path))",
+          "interval": "",
+          "legendFormat": "p50 latency - {{path}}",
+          "refId": "B"
+        }
+      ],
+      "title": "Request Latency (p95 & p50)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 16
+      },
+      "id": 8,
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto",
+        "thresholds": {
+          "mode": "absolute",
+          "steps": [
+            { "color": "green", "value": null },
+            { "color": "yellow", "value": 1 },
+            { "color": "red", "value": 5 }
+          ]
+        }
+      },
+      "pluginVersion": "8.4.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "api_error_rate_percent",
+          "interval": "",
+          "legendFormat": "Error Rate %",
+          "refId": "A"
+        }
+      ],
+      "title": "API Error Rate (%)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 16
+      },
+      "id": 10,
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.4.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "model_accuracy_percent",
+          "interval": "",
+          "legendFormat": "Accuracy %",
+          "refId": "A"
+        }
+      ],
+      "title": "Model Accuracy (%)",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 16
+      },
+      "id": 14,
+      "options": {
+        "reduceOptions": {
+          "calcs": ["lastNotNull"],
+          "fields": "",
+          "values": false
+        },
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "textMode": "auto"
+      },
+      "pluginVersion": "8.4.3",
+      "targets": [
+        {
+          "exemplar": true,
+          "expr": "business_optimizations_completed_total",
+          "interval": "",
+          "legendFormat": "Optimizations",
+          "refId": "A"
+        }
+      ],
+      "title": "Optimizations Completed",
+      "type": "stat"
     }
   ],
   "schemaVersion": 30,
@@ -100,5 +245,5 @@
   "timezone": "",
   "title": "Healthcare Data Pipeline",
   "uid": "hdp-dashboard",
-  "version": 2
+  "version": 3
 }

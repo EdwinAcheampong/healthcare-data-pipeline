@@ -1,0 +1,54 @@
+version: "3.8"
+
+services:
+  # Prometheus for metrics collection
+  prometheus:
+    image: prom/prometheus:v2.37.0
+    container_name: msc_prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus:/etc/prometheus
+      - prometheus_data:/prometheus
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+    networks:
+      - msc_network
+
+  # Prometheus Pushgateway for short-lived jobs
+  pushgateway:
+    image: prom/pushgateway:v1.4.2
+    container_name: msc_pushgateway
+    ports:
+      - "9091:9091"
+    networks:
+      - msc_network
+
+  # Grafana for metrics visualization
+  grafana:
+    image: grafana/grafana:8.4.3
+    container_name: msc_grafana
+    ports:
+      - "3000:3000"
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./grafana/provisioning:/etc/grafana/provisioning
+      - ./grafana/dashboards:/var/lib/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Viewer
+    depends_on:
+      - prometheus
+    networks:
+      - msc_network
+
+volumes:
+  prometheus_data:
+  grafana_data:
+
+networks:
+  msc_network:
+    driver: bridge
