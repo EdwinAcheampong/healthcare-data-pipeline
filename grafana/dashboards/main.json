@@ -59,7 +59,7 @@
         "colorMode": "palette-classic",
         "graphMode": "area",
         "justifyMode": "auto",
-        "orientation": "auto",
+        "orientation": "horizontal",
         "textMode": "auto"
       },
       "pluginVersion": "8.4.3",
